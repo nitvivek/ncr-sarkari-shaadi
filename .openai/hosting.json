@@ -1,7 +1,3 @@
 {
-  "project_id": "appgprj_6a5bc6b399b081919df35dfa26365cef",
-  "framework": "nextjs",
-  "build_command": "npm run build",
-  "install_command": "npm install",
-  "output_directory": ".next"
+  "project_id": "appgprj_6a5bc6b399b081919df35dfa26365cef"
 }
