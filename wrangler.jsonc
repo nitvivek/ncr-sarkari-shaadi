@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "ncr-sarkari-shaadi",
+  "name": "v2",
   "compatibility_date": "2026-07-18",
   "compatibility_flags": [
     "nodejs_compat"
@@ -13,5 +13,12 @@
   },
   "images": {
     "binding": "IMAGES"
-  }
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "ncrsarkariishaadi-db",
+      "database_id": "6fc2c188-023e-461a-9583-d942ee188ac2"
+    }
+  ]
 }
