@@ -43,3 +43,27 @@ export const ncrDistrictGroups: NcrDistrictGroup[] = [
 ];
 
 export const allNcrDistricts = ncrDistrictGroups.flatMap((group) => group.districts);
+
+// Government service cadres that are permanently headquartered in Delhi.
+// NCRSarkariShaadi caters to members of these cadres; "Other" stays open-ended
+// for eligible members whose cadre is not listed.
+export const serviceCadres = [
+  'Central Secretariat Service (CSS)',
+  "Central Secretariat Stenographers' Service (CSSS)",
+  'Railway Board Secretariat Service (RBSS)',
+  'Armed Forces Headquarters Civil Service (AFHQCS)',
+  'Indian Foreign Service (IFS / MEA Assistant Cadre)',
+  'Lok Sabha Secretariat Cadre',
+  'Rajya Sabha Secretariat Cadre',
+  'DANICS (Delhi, Andaman & Nicobar Islands Civil Service)',
+  'DANIPS (Delhi, Andaman & Nicobar Islands Police Service)',
+  'Delhi Development Authority (DDA)',
+  'DASS (Delhi Administration Subordinate Service)',
+  'GNCTDSS (Delhi State Subordinate Services)',
+  'Municipal Corporation of Delhi (MCD) Cadre',
+  'New Delhi Municipal Council (NDMC) Cadre',
+  'Delhi Transport Corporation (DTC) Cadre',
+  'Delhi Metro Rail Corporation (DMRC) Cadre',
+  'Delhi Transco Limited (DTL) Cadre',
+  'Other',
+];
