@@ -254,9 +254,13 @@ const marqueeCadres = ['CSS', 'CSSS', 'RBSS', 'AFHQCS', 'IFS · MEA', 'Lok Sabha
    e.g. photo: '/stories/couple-1.jpg' — the card upgrades automatically. */
 type Story = { id: number; names: string; married: string; place: string; tone: string; photo?: string };
 const successStories: Story[] = [
-  { id: 1, names: 'Arjun & Meera', married: 'March 2025', place: 'Delhi', tone: 'rose', photo: '/stories/delhi.jpg' },
+  { id: 1, names: 'Arjun & Meera', married: 'March 2025', place: 'New Delhi', tone: 'rose', photo: '/stories/delhi.jpg' },
   { id: 2, names: 'Kabir & Ananya', married: 'November 2024', place: 'Gurugram', tone: 'sand', photo: '/stories/gurugram.jpg' },
   { id: 3, names: 'Rohit & Saanvi', married: 'February 2025', place: 'Noida', tone: 'sage', photo: '/stories/noida.jpg' },
+  { id: 4, names: 'Vikram & Ishita', married: 'December 2024', place: 'New Delhi', tone: 'sand', photo: '/stories/delhi-parliament.jpg' },
+  { id: 5, names: 'Karan & Diya', married: 'January 2025', place: 'Faridabad', tone: 'rose', photo: '/stories/faridabad.jpg' },
+  { id: 6, names: 'Aditya & Neha', married: 'April 2025', place: 'Ghaziabad', tone: 'sage', photo: '/stories/ghaziabad.jpg' },
+  { id: 7, names: 'Nikhil & Riya', married: 'October 2024', place: 'Greater Noida', tone: 'sand', photo: '/stories/greaternoida.jpg' },
 ];
 
 /** Illustrated wedding-couple art (silhouette style) for cards without a photograph yet. */
