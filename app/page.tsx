@@ -249,14 +249,44 @@ function OnboardModal({ onClose, onDone }: { onClose: () => void; onDone: () => 
 
 const marqueeCadres = ['CSS', 'CSSS', 'RBSS', 'AFHQCS', 'IFS · MEA', 'Lok Sabha Sectt.', 'Rajya Sabha Sectt.', 'DANICS', 'DANIPS', 'DDA', 'DASS', 'GNCTDSS', 'MCD', 'NDMC', 'DTC', 'DMRC', 'DTL'];
 
-/* Real Delhi-NCR couples, shared with permission. photo: place files in public/stories/
-   and set e.g. photo: '/stories/couple-1.jpg' — the card upgrades automatically. */
+/* Representative couples for the launch preview. When real photographs arrive
+   (with written permission), place files in public/stories/ and set
+   e.g. photo: '/stories/couple-1.jpg' — the card upgrades automatically. */
 type Story = { id: number; names: string; married: string; place: string; tone: string; photo?: string };
 const successStories: Story[] = [
-  { id: 1, names: 'Their story', married: 'Arriving with launch', place: 'Delhi', tone: 'rose' },
-  { id: 2, names: 'Their story', married: 'Arriving with launch', place: 'Gurugram', tone: 'sand' },
-  { id: 3, names: 'Their story', married: 'Arriving with launch', place: 'Noida', tone: 'sage' },
+  { id: 1, names: 'Arjun & Meera', married: 'March 2025', place: 'Delhi', tone: 'rose' },
+  { id: 2, names: 'Kabir & Ananya', married: 'November 2024', place: 'Gurugram', tone: 'sand' },
+  { id: 3, names: 'Rohit & Saanvi', married: 'February 2025', place: 'Noida', tone: 'sage' },
 ];
+
+/** Illustrated wedding-couple art (silhouette style) for cards without a photograph yet. */
+function CoupleArt({ tone }: { tone: string }) {
+  const palettes: Record<string, { groom: string; bride: string }> = {
+    rose: { groom: '#4a1220', bride: '#a03040' },
+    sand: { groom: '#43121f', bride: '#8a5f14' },
+    sage: { groom: '#2f5744', bride: '#6b2233' },
+  };
+  const p = palettes[tone] ?? palettes.rose;
+  return <svg className="couple-art" viewBox="0 0 300 360" role="img" aria-label="Illustration of a wedding couple">
+    {/* marigold garland swags */}
+    <path d="M20 14 Q150 84 280 14" fill="none" stroke="#a8790f" strokeWidth="1.4" strokeDasharray="1 7" strokeLinecap="round" opacity="0.75" />
+    <path d="M52 8 Q150 60 248 8" fill="none" stroke="#c99f3f" strokeWidth="1.2" strokeDasharray="1 6" strokeLinecap="round" opacity="0.6" />
+    <circle cx="150" cy="52" r="4" fill="#c99f3f" opacity="0.8" /><circle cx="96" cy="40" r="3" fill="#a8790f" opacity="0.7" /><circle cx="204" cy="40" r="3" fill="#a8790f" opacity="0.7" />
+    {/* groom */}
+    <circle cx="128" cy="176" r="27" fill={p.groom} />
+    <path d="M104 158 q24-20 48 0 l-4-16 q-20-12-40 0 Z" fill={p.groom} opacity="0.85" />
+    <path d="M86 360 V254 q0-48 42-48 q42 0 42 48 V360 Z" fill={p.groom} />
+    <path d="M120 214 l8 14 8-14" fill="none" stroke="#e6c36a" strokeWidth="1.6" strokeLinecap="round" />
+    {/* bride */}
+    <circle cx="196" cy="198" r="23" fill={p.bride} />
+    <path d="M162 236 q6-64 68-42 q14 26 2 44" fill="none" stroke="#c99f3f" strokeWidth="2" strokeLinecap="round" opacity="0.85" />
+    <path d="M162 360 V270 q0-42 36-42 q36 0 36 42 V360 Z" fill={p.bride} />
+    <circle cx="196" cy="188" r="2.4" fill="#e6c36a" />
+    <path d="M188 232 q8 8 16 0" fill="none" stroke="#e6c36a" strokeWidth="1.6" strokeLinecap="round" />
+    {/* joined hands garland dot */}
+    <circle cx="160" cy="286" r="5" fill="#c99f3f" opacity="0.9" />
+  </svg>;
+}
 
 function StoriesSection() {
   const railRef = useRef<HTMLDivElement>(null);
@@ -272,13 +302,13 @@ function StoriesSection() {
       <button className="rail-nav rail-nav--prev" aria-label="Previous stories" onClick={() => scrollRail(-1)}><Icon name="chevron" size={18} /></button>
       <div className="stories-rail" ref={railRef}>
         {successStories.map((story) => <article className="story-card" key={story.id}>
-          <div className={`story-photo story-photo--${story.tone}`}>{story.photo ? <img src={story.photo} alt={`${story.names}, married in ${story.place}`} loading="lazy" /> : <div className="story-placeholder"><Paisley size={44} /><span>With their permission,<br />photographs arrive soon</span></div>}</div>
+          <div className={`story-photo story-photo--${story.tone}`}>{story.photo ? <img src={story.photo} alt={`${story.names}, married in ${story.place}`} loading="lazy" /> : <CoupleArt tone={story.tone} />}</div>
           <div className="story-meta"><h3>{story.names}</h3><span className="story-rule" /><small>{story.married} · {story.place}</small></div>
         </article>)}
       </div>
       <button className="rail-nav rail-nav--next" aria-label="More stories" onClick={() => scrollRail(1)}><Icon name="chevron" size={18} /></button>
     </div>
-    <p className="stories-note reveal" data-reveal-delay="2"><Icon name="shield" size={14} /> Photographs are published only with written consent, and are never part of member profiles.</p>
+    <p className="stories-note reveal" data-reveal-delay="2"><Icon name="shield" size={14} /> Representative names and artwork for the launch preview. Real photographs appear only with written consent, and are never part of member profiles.</p>
   </section>;
 }
 
