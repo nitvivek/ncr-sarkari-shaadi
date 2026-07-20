@@ -2,9 +2,33 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'NCRSarkariShaadi — Career-compatible matrimony for NCR government professionals',
+  metadataBase: new URL('https://v2.ncrsarkarishaadi.workers.dev'),
+  title: 'NCRSarkariShaadi — Free Verified Matrimony for Government Officers in Delhi NCR',
   description:
-    'A verified, privacy-first matrimony platform for government professionals building their careers in the Delhi NCR.',
+    'A free, privacy-first matrimony platform exclusively for CSS, DANICS, IPS, IFS & allied government professionals posted in Delhi NCR (National Capital Region). Verified profiles, hidden-photo options, and free two-way messaging.',
+  keywords: [
+    'government matrimony Delhi',
+    'CSS matrimony',
+    'DANICS marriage',
+    'NCR sarkari shaadi',
+    'verified government matrimonial',
+    'free govt officer matrimony',
+  ],
+  openGraph: {
+    title: 'NCRSarkariShaadi — Free Verified Matrimony for Government Officers in Delhi NCR',
+    description:
+      'Two government careers, one shared life in Delhi NCR. Verified, privacy-first, and free two-way messaging — built for CSS, DANICS, IPS, IFS and allied services.',
+    url: 'https://v2.ncrsarkarishaadi.workers.dev',
+    siteName: 'NCRSarkariShaadi',
+    locale: 'en_IN',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'NCRSarkariShaadi — Free Verified Matrimony for Government Officers in Delhi NCR',
+    description:
+      'Two government careers, one shared life in Delhi NCR. Verified, privacy-first, free two-way messaging.',
+  },
 };
 
 export const viewport: Viewport = {

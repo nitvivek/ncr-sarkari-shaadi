@@ -316,6 +316,96 @@ function StoriesSection() {
   </section>;
 }
 
+// ---- Emotion-first landing sections (research-driven) ----
+
+const routineSteps: { icon: IconName; time: string; label: string }[] = [
+  { icon: 'clock', time: 'Morning', label: 'Chai and breakfast together before the day begins' },
+  { icon: 'briefcase', time: 'Day', label: 'Both leave for office — and both come home to the same city' },
+  { icon: 'home', time: 'Evening', label: 'Dinner together, not a video call across two cities' },
+  { icon: 'users', time: 'Weekend', label: 'Parents, children, a trip — one shared life, not two' },
+];
+
+function SpineSection({ onOnboard }: { onOnboard: () => void }) {
+  return <section className="section shell spine-section" aria-label="Two careers, one city, one life">
+    <div className="section-intro reveal"><div className="eyebrow">Why a shared government life</div><h2>Two careers. One city. <em className="stories-em">One life.</em></h2><p>Marrying another permanently Delhi-posted government professional isn’t only about matching biodata. It aligns two whole lives — the rule-books, the leave calendars, the postings, and the home you build around both. These are real advantages, not guarantees; compatibility still matters most.</p></div>
+    <div className="stat-tiles reveal" data-reveal-delay="1">
+      <div className="stat-tile"><strong>2</strong><span>pensions &amp; CGHS covers — one secure household</span></div>
+      <div className="stat-tile"><strong>1</strong><span>city, one home — no second rent, no two kitchens</span></div>
+      <div className="stat-tile"><strong>0</strong><span>long-distance — the biggest stressor, removed by design</span></div>
+      <div className="stat-tile stat-tile--accent"><strong>Same</strong><span>rule-book — fewer arguments about “why I’m on election duty”</span></div>
+    </div>
+    <div className="routine-strip reveal" data-reveal-delay="2">{routineSteps.map((step, i) => <div className="routine-step" key={step.time}><span className="routine-icon"><Icon name={step.icon} size={20} /></span><strong>{step.time}</strong><small>{step.label}</small>{i < routineSteps.length - 1 && <i className="routine-arrow"><Icon name="arrow" size={15} /></i>}</div>)}</div>
+    <div className="spine-cta reveal"><button className="button button--dark" onClick={onOnboard}>Start with what keeps you here <Icon name="arrow" size={15} /></button></div>
+  </section>;
+}
+
+function SameCitySection() {
+  const away = ['Flights and trains, again and again', 'Two rents, two kitchens, duplicate bills', 'Lonely weekends and missed dinners', 'One parent carrying most days alone', 'A quiet ₹8+ lakh drained every year'];
+  const together = ['One home you actually share', 'Daily dinners, ordinary evenings together', 'Shared parenting — both present', 'One budget, stronger savings', 'Together for the small moments that matter'];
+  return <section className="section section--soft same-city" aria-label="Why same city matters">
+    <div className="shell"><div className="section-intro reveal"><div className="eyebrow">Why same-city matters</div><h2>The difference a shared postal code makes.</h2><p>Even two government careers can drift apart when they sit in different cities. Delhi NCR, by design, removes the single biggest structural stress of a service marriage.</p></div>
+    <div className="split-grid reveal" data-reveal-delay="1">
+      <div className="split-card split-card--away"><div className="split-head"><Icon name="clock" size={18} /> Different cities</div><ul>{away.map((t) => <li key={t}><span className="split-x"><Icon name="x" size={12} /></span>{t}</li>)}</ul></div>
+      <div className="split-versus" aria-hidden><Icon name="heart" size={18} /></div>
+      <div className="split-card split-card--together"><div className="split-head"><Icon name="home" size={18} /> Delhi NCR, together</div><ul>{together.map((t) => <li key={t}><span className="split-check"><Icon name="check" size={12} /></span>{t}</li>)}</ul></div>
+    </div>
+    <p className="split-note reveal" data-reveal-delay="2"><Icon name="spark" size={14} /> Cost figures are illustrative — every posting and family is different.</p></div>
+  </section>;
+}
+
+function FreeMessagingBand({ onOnboard }: { onOnboard: () => void }) {
+  return <section className="shell free-band reveal" aria-label="Free two-way messaging">
+    <div className="free-band-icon"><Icon name="mail" size={26} /></div>
+    <div className="free-band-copy"><h3>Free two-way messaging. No premium tier, ever.</h3><p>No “men pay, women free” divide. No upgrade to unlock a conversation, view a number, or be taken seriously. Government salaries are public — we won’t gatekeep connection behind a fee. Every verified member has identical access.</p></div>
+    <button className="button button--outline" onClick={onOnboard}>Join free <Icon name="arrow" size={15} /></button>
+  </section>;
+}
+
+const verifySteps: { icon: IconName; label: string }[] = [
+  { icon: 'mail', label: 'Mobile OTP' },
+  { icon: 'briefcase', label: 'Government ID' },
+  { icon: 'user', label: 'Human review' },
+  { icon: 'check', label: 'Photo match' },
+  { icon: 'shield', label: 'Live badge' },
+  { icon: 'clock', label: 'Ongoing watch' },
+];
+
+function VerificationPipeline() {
+  return <section className="section shell verify-section" aria-label="How verification works">
+    <div className="section-intro reveal"><div className="eyebrow">Trust as a system, not a badge</div><h2>Verified before visible.</h2><p>In a community of public servants, a fake profile is a reputational risk — so trust here is a pipeline, not a tick-mark. Your documents are reviewed privately and never displayed. Other members only ever see the badge.</p></div>
+    <div className="pipeline reveal" data-reveal-delay="1">{verifySteps.map((s, i) => <div className="pipeline-step" key={s.label}><span className="pipeline-node"><Icon name={s.icon} size={18} /></span><small>{s.label}</small>{i < verifySteps.length - 1 && <i className="pipeline-line" aria-hidden />}</div>)}</div>
+  </section>;
+}
+
+const compareRows: { promise: string; deliver: string }[] = [
+  { promise: '“Verified profiles”', deliver: 'Human-reviewed government-service verification with visible badges' },
+  { promise: '“Free messaging”', deliver: 'Truly free two-way chat — no premium tiers, no unlock fees' },
+  { promise: '“Privacy settings”', deliver: 'Granular, women-first controls: hidden profiles, photo-on-request, contact masking' },
+  { promise: '“Local matches”', deliver: 'Strict Delhi NCR focus — every profile is current and geographically real' },
+  { promise: '“Serious intentions”', deliver: 'Community limited to government professionals and their families' },
+];
+
+function ComparisonTable() {
+  return <section className="section shell compare-section" aria-label="What others promise versus what we deliver">
+    <div className="section-intro reveal"><div className="eyebrow">The honest comparison</div><h2>What others promise. What we actually deliver.</h2></div>
+    <div className="compare-table reveal" data-reveal-delay="1"><div className="compare-head"><span>What others promise</span><span>What we deliver</span></div>{compareRows.map((r) => <div className="compare-row" key={r.promise}><span className="compare-promise">{r.promise}</span><span className="compare-deliver"><Icon name="check" size={14} />{r.deliver}</span></div>)}</div>
+  </section>;
+}
+
+const womenControls: { icon: IconName; title: string; desc: string }[] = [
+  { icon: 'lock', title: 'Hidden by default', desc: 'Stay invisible to general browsing — appear only to members you approve.' },
+  { icon: 'mail', title: 'Review before contact', desc: 'Screen interest requests first. No unsolicited detail-sharing.' },
+  { icon: 'shield', title: 'Documents stay confidential', desc: 'Service and identity papers are reviewed privately, never shown on your profile.' },
+  { icon: 'search', title: 'No “recently viewed” trail', desc: 'Browse profiles without appearing in anyone’s viewed list unless you engage.' },
+];
+
+function WomenPrivacySection() {
+  return <section className="section shell women-section" aria-label="Built with women in government in mind">
+    <div className="section-intro reveal"><div className="eyebrow">Built with women in government in mind</div><h2>Anonymity isn’t a luxury. It’s a necessity.</h2><p>For women in visible government roles, privacy is a foundational expectation — not an add-on. Every control here is granular and reversible, so you decide who sees what, and when.</p></div>
+    <div className="women-grid reveal" data-reveal-delay="1">{womenControls.map((c) => <div className="women-card" key={c.title}><span className="women-icon"><Icon name={c.icon} size={18} /></span><strong>{c.title}</strong><small>{c.desc}</small></div>)}</div>
+  </section>;
+}
+
 function Landing({ onAuth, onOnboard, onDemo }: { onAuth: () => void; onOnboard: () => void; onDemo: () => void }) {
   useEffect(() => {
     document.documentElement.classList.add('js');
@@ -328,12 +418,20 @@ function Landing({ onAuth, onOnboard, onDemo }: { onAuth: () => void; onOnboard:
   }, []);
   return <main className="landing">
     <nav className="landing-nav shell"><Logo /><div className="landing-links"><a href="#why">Why NCR</a><a href="#how">How it works</a><a href="#safety">Trust & privacy</a></div><div className="nav-actions"><button className="button button--ghost" onClick={onAuth}>Sign in</button><button className="button button--dark" onClick={onOnboard}>Create free profile <Icon name="arrow" size={15} /></button><button className="mobile-menu" aria-label="Open menu"><Icon name="menu" /></button></div></nav>
-    <section className="hero shell"><div className="hero-copy"><div className="eyebrow"><span className="eyebrow-dot" /> The NCR’s verified matrimony community</div><h1><span className="reveal-line"><span>A career that</span></span><span className="reveal-line"><span>stays close to <em>home.</em></span></span></h1><p className="hero-lede">NCRSarkariShaadi is a calmer way for government professionals to meet someone who understands the work, the transfers, and the life you’re building around both.</p><div className="hero-actions"><MagneticButton className="button button--primary button--large" onClick={onOnboard}>Create your free profile <Icon name="arrow" size={17} /></MagneticButton><button className="button button--text button--large" onClick={onDemo}>Explore the member experience <Icon name="arrow" size={17} /></button></div><div className="hero-proof"><span><Icon name="shield" size={16} /> Identity reviewed</span><span><Icon name="lock" size={16} /> Privacy you control</span><span><Icon name="spark" size={16} /> Always free</span></div></div><div className="hero-visual"><div className="hero-glow" /><div className="match-art-card match-art-card--back"><span className="art-label">Posting compatibility</span><strong>Same city, same season</strong><div className="art-route"><span>Delhi</span><i>→</i><span>NCR</span></div></div><div className="match-art-card match-art-card--front"><div className="art-card-top"><span className="art-label">Today’s alignment</span><span className="art-score">94%</span></div><div className="art-people"><div className="art-person"><div className="portrait portrait--one">AS</div><span>Aditi</span><small>CSS · New Delhi</small></div><div className="art-heart"><Icon name="heart" size={20} /></div><div className="art-person"><div className="portrait portrait--two">RK</div><span>Rohan</span><small>DANICS · Noida</small></div></div><div className="art-tags"><span>Stay in NCR</span><span>Verified</span><span>Family-minded</span></div></div><div className="floating-note"><span className="note-icon"><Icon name="check" size={13} /></span><span><strong>Both are verified</strong><small>Documents reviewed privately</small></span></div><Paisley /></div></section>
+    <section className="hero shell"><div className="hero-copy"><div className="eyebrow"><span className="eyebrow-dot" /> The NCR’s verified matrimony community</div><h1><span className="reveal-line"><span>Two careers. One home.</span></span><span className="reveal-line"><span>One <em>future.</em></span></span></h1><p className="hero-lede">Finding someone attractive is easy. Finding someone whose career, postings, family expectations and future actually fit yours is hard. That’s why NCRSarkariShaadi exists.</p><div className="hero-chips"><span><Icon name="pin" size={14} /> Delhi NCR only</span><span><Icon name="shield" size={14} /> Verified government professionals</span><span><Icon name="lock" size={14} /> Women-first privacy</span><span><Icon name="spark" size={14} /> Free forever</span></div><div className="hero-actions"><MagneticButton className="button button--primary button--large" onClick={onOnboard}>Create free profile <Icon name="arrow" size={17} /></MagneticButton><button className="button button--text button--large" onClick={onDemo}>Browse matches <Icon name="arrow" size={17} /></button></div><p className="hero-cadres">For CSS · DANICS · IPS · IFS · DANIPS · DASS · RBSS · AFHQCS — and 15+ more central &amp; state services posted in Delhi NCR (National Capital Region).</p></div><div className="hero-visual"><div className="hero-glow" /><div className="match-art-card match-art-card--back"><span className="art-label">Posting compatibility</span><strong>Same city, same season</strong><div className="art-route"><span>Delhi</span><i>→</i><span>NCR</span></div></div><div className="match-art-card match-art-card--front"><div className="art-card-top"><span className="art-label">Today’s alignment</span><span className="art-score">94%</span></div><div className="art-people"><div className="art-person"><div className="portrait portrait--one">AS</div><span>Aditi</span><small>CSS · New Delhi</small></div><div className="art-heart"><Icon name="heart" size={20} /></div><div className="art-person"><div className="portrait portrait--two">RK</div><span>Rohan</span><small>DANICS · Noida</small></div></div><div className="art-tags"><span>Stay in NCR</span><span>Verified</span><span>Family-minded</span></div></div><div className="floating-note"><span className="note-icon"><Icon name="check" size={13} /></span><span><strong>Both are verified</strong><small>Documents reviewed privately</small></span></div><Paisley /></div></section>
     <section className="marquee" aria-label="Delhi's permanent government cadres"><div className="marquee-track">{[0, 1].map((copy) => marqueeCadres.map((cadre) => <span className="marquee-item" key={`${copy}-${cadre}`} aria-hidden={copy === 1}><svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor" aria-hidden><path d="M5 0 10 5 5 10 0 5Z" /></svg>{cadre}</span>))}</div></section>
-    <section id="why" className="section shell why-section"><div className="section-intro reveal"><div className="eyebrow">The right first filter</div><h2>Compatibility is more than a checklist.</h2><p>For serving professionals, a good match has to work in real life—commutes, postings, parents, and a home you can share.</p></div><div className="feature-grid"><div className="feature-card feature-card--accent reveal"><span className="feature-number">01</span><Icon name="briefcase" size={23} /><h3>Career-aware matching</h3><p>We put service, posting flexibility, and your preferred NCR hubs at the centre of every recommendation.</p><a href="#how">See the matching logic <Icon name="arrow" size={14} /></a></div><div className="feature-card reveal" data-reveal-delay="1"><span className="feature-number">02</span><Icon name="shield" size={23} /><h3>Trust you can understand</h3><p>Identity, mobile, and service proof become clear, useful badges—not documents sitting in a dark folder.</p><a href="#safety">How verification works <Icon name="arrow" size={14} /></a></div><div className="feature-card reveal" data-reveal-delay="2"><span className="feature-number">03</span><Icon name="lock" size={23} /><h3>Privacy at every step</h3><p>Hide your photo, contact details, and detailed profile until you are comfortable. You decide who gets closer.</p><a href="#safety">Explore privacy controls <Icon name="arrow" size={14} /></a></div></div></section>
+    <SpineSection onOnboard={onOnboard} />
+    <GotaDivider />
+    <SameCitySection />
+    <FreeMessagingBand onOnboard={onOnboard} />
+    <section id="why" className="section shell why-section"><div className="section-intro reveal"><div className="eyebrow">The right first filter</div><h2>Compatibility is more than a checklist.</h2><p>For serving professionals, a good match has to work in real life—commutes, postings, parents, and a home you can share.</p></div><div className="feature-grid"><div className="feature-card feature-card--accent reveal"><span className="feature-number">01</span><Icon name="briefcase" size={23} /><h3>Career-aware matching</h3><p>We put service, posting flexibility, and your preferred NCR hubs at the centre of every recommendation.</p><em className="why-matters">A DANICS officer in Noida and a CSS officer in New Delhi share a commute reality a generic site simply can’t see.</em><a href="#how">See the matching logic <Icon name="arrow" size={14} /></a></div><div className="feature-card reveal" data-reveal-delay="1"><span className="feature-number">02</span><Icon name="shield" size={23} /><h3>Trust you can understand</h3><p>Identity, mobile, and service proof become clear, useful badges—not documents sitting in a dark folder.</p><em className="why-matters">In a community of public servants, identity fraud is a reputational risk — so we treat verification as seriously as you treat your service record.</em><a href="#safety">How verification works <Icon name="arrow" size={14} /></a></div><div className="feature-card reveal" data-reveal-delay="2"><span className="feature-number">03</span><Icon name="lock" size={23} /><h3>Privacy at every step</h3><p>Hide your photo, contact details, and detailed profile until you are comfortable. You decide who gets closer.</p><em className="why-matters">You share information in stages — basic first, details after interest, contact only when it feels right.</em><a href="#safety">Explore privacy controls <Icon name="arrow" size={14} /></a></div></div></section>
     <GotaDivider />
     <section id="how" className="section section--soft"><div className="shell flow-section"><div className="section-intro reveal"><div className="eyebrow">A simple beginning</div><h2>Meet with more context, less noise.</h2><p>Familiar matchmaking patterns, shaped around the practical realities of NCR government life.</p></div><div className="flow-grid"><div className="flow-step reveal"><span>1</span><h3>Make a private profile</h3><p>Tell us your service, NCR base, and what a shared future looks like.</p></div><div className="flow-step reveal" data-reveal-delay="1"><span>2</span><h3>See aligned profiles</h3><p>Browse relevant recommendations with clear compatibility signals.</p></div><div className="flow-step reveal" data-reveal-delay="2"><span>3</span><h3>Connect at your pace</h3><p>Shortlist, send an interest, and share details only when it feels right.</p></div></div><div className="pattern-callout reveal"><div><Icon name="spark" size={20} /><strong>Inspired by what works. Focused on what’s missing.</strong><p>Search, shortlists, privacy settings, and safe chat are familiar. Career stability is the signal that makes them more useful here.</p></div><button className="button button--dark" onClick={onDemo}>See the member home <Icon name="arrow" size={15} /></button></div></div></section>
+    <GotaDivider />
+    <VerificationPipeline />
     <section id="safety" className="section shell safety-section"><div className="safety-visual reveal"><div className="privacy-card"><div className="privacy-top"><span className="privacy-icon"><Icon name="lock" size={18} /></span><span><strong>Your privacy, your pace</strong><small>Control who sees what</small></span><span className="privacy-toggle"><i /></span></div><div className="privacy-row"><span>Detailed profile</span><strong>Matches only</strong><Icon name="chevron" size={15} /></div><div className="privacy-row"><span>Photo</span><strong>On request</strong><Icon name="chevron" size={15} /></div><div className="privacy-row"><span>Contact details</span><strong>Hidden</strong><Icon name="chevron" size={15} /></div></div></div><div className="safety-copy reveal" data-reveal-delay="1"><div className="eyebrow">A considered way to connect</div><h2>Trust is not a badge. It’s a system.</h2><p>We borrow the best safety habits from leading matrimony platforms and make them default: mobile verification, document review, photo controls, private contact details, and clear reporting.</p><div className="safety-list"><div><span><Icon name="check" size={14} /></span><p><strong>Verified before visible</strong><br /><small>Every profile starts with mobile verification and moves through a human review queue.</small></p></div><div><span><Icon name="check" size={14} /></span><p><strong>Private until mutual</strong><br /><small>Your phone and documents are never part of a public profile.</small></p></div><div><span><Icon name="check" size={14} /></span><p><strong>One free community</strong><br /><small>No premium tier to see contact details or be treated seriously.</small></p></div></div><button className="button button--text" onClick={onOnboard}>Create a profile with care <Icon name="arrow" size={15} /></button></div></section>
+    <WomenPrivacySection />
+    <ComparisonTable />
     <GotaDivider />
     <StoriesSection />
     <GotaDivider />
