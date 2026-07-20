@@ -851,6 +851,63 @@ html.js .reveal[data-reveal-delay='3'] { transition-delay: 0.3s; }
 .quick-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin-top: 24px; }
 
 /* ----------------------------------------------------------------------------
+   18b · SUCCESS STORIES (landing)
+---------------------------------------------------------------------------- */
+.stories-section { padding-bottom: 110px; }
+.stories-em { font-style: italic; background: var(--gold-foil); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.stories-rail-wrap { position: relative; margin-top: 56px; }
+.stories-rail {
+  display: flex; gap: 22px;
+  overflow-x: auto; scroll-snap-type: x mandatory;
+  padding: 14px 4px 22px;
+  scrollbar-width: none;
+}
+.stories-rail::-webkit-scrollbar { display: none; }
+.story-card { flex: 0 0 min(330px, 82vw); scroll-snap-align: start; }
+.story-photo {
+  position: relative; aspect-ratio: 3 / 3.6; overflow: hidden;
+  border-radius: 165px 165px var(--r-l) var(--r-l); /* jharokha arch */
+  border: 1px solid rgba(201, 159, 63, 0.5);
+  box-shadow: var(--shadow-m);
+  transition: transform 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out);
+}
+.story-card:hover .story-photo { transform: translateY(-6px); box-shadow: var(--shadow-l); }
+.story-photo::after { /* inner gold ring */
+  content: ''; position: absolute; inset: 8px;
+  border: 1px solid rgba(242, 223, 164, 0.65);
+  border-radius: 157px 157px calc(var(--r-l) - 6px) calc(var(--r-l) - 6px);
+  pointer-events: none;
+}
+.story-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.story-photo--rose { background: linear-gradient(170deg, #f0cfc4, #daa091); }
+.story-photo--sand { background: linear-gradient(170deg, #f2e0b8, #e0c184); }
+.story-photo--sage { background: linear-gradient(170deg, #d3e2d5, #a8c4b0); }
+.story-placeholder {
+  position: absolute; inset: 0; display: grid; place-items: center; align-content: center; gap: 14px;
+  text-align: center; color: var(--maroon-deep); font-size: 12.5px; line-height: 1.6; font-weight: 500;
+  padding: 26px;
+}
+.story-placeholder .paisley-float { position: static; animation: paisley-drift 7s ease-in-out infinite; color: var(--gold-deep); opacity: 0.8; }
+.story-meta { text-align: center; padding: 18px 8px 0; }
+.story-meta h3 { font-family: var(--font-display); font-style: italic; font-weight: 560; font-variation-settings: 'SOFT' 70, 'WONK' 1; font-size: 27px; letter-spacing: -0.03em; color: var(--maroon-ink); margin: 0; }
+.story-rule { display: block; width: 74px; height: 2px; margin: 12px auto 10px; background: var(--gold-foil); border-radius: 2px; }
+.story-meta small { display: block; color: var(--ink-muted); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.13em; }
+.rail-nav {
+  position: absolute; top: 42%; z-index: 2;
+  width: 44px; height: 44px; border-radius: 50%;
+  border: 1px solid rgba(201, 159, 63, 0.5); background: var(--white); color: var(--maroon);
+  display: grid; place-items: center; box-shadow: var(--shadow-m);
+  transition: transform 0.2s var(--ease-out), box-shadow 0.2s, color 0.2s;
+}
+.rail-nav:hover { transform: translateY(-2px); box-shadow: var(--shadow-gold); color: var(--sindoor); }
+.rail-nav--prev { left: -18px; }
+.rail-nav--prev svg { transform: rotate(90deg); }
+.rail-nav--next { right: -18px; }
+.rail-nav--next svg { transform: rotate(-90deg); }
+.stories-note { display: flex; align-items: center; justify-content: center; gap: 7px; color: var(--ink-muted); font-size: 12.5px; margin: 26px 0 0; }
+.stories-note svg { color: var(--green); flex: none; }
+
+/* ----------------------------------------------------------------------------
    19 · VIEW TRANSITIONS
 ---------------------------------------------------------------------------- */
 ::view-transition-old(root) { animation-duration: 0.35s; }
@@ -936,6 +993,10 @@ html.js .reveal[data-reveal-delay='3'] { transition-delay: 0.3s; }
   .admin-stats { grid-template-columns: 1fr 1fr; }
   .review-table { overflow: auto; }
   .review-table-head, .review-row { min-width: 700px; }
+  .stories-rail-wrap { margin-top: 40px; }
+  .rail-nav--prev { left: -6px; }
+  .rail-nav--next { right: -6px; }
+  .story-meta h3 { font-size: 23px; }
   .quick-profile { padding: 26px; }
   .quick-profile-head { align-items: flex-start; }
   .quick-profile-head .avatar--large { width: 62px; height: 72px; font-size: 22px; }

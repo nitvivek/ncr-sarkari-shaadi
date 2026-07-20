@@ -249,6 +249,39 @@ function OnboardModal({ onClose, onDone }: { onClose: () => void; onDone: () => 
 
 const marqueeCadres = ['CSS', 'CSSS', 'RBSS', 'AFHQCS', 'IFS · MEA', 'Lok Sabha Sectt.', 'Rajya Sabha Sectt.', 'DANICS', 'DANIPS', 'DDA', 'DASS', 'GNCTDSS', 'MCD', 'NDMC', 'DTC', 'DMRC', 'DTL'];
 
+/* Real Delhi-NCR couples, shared with permission. photo: place files in public/stories/
+   and set e.g. photo: '/stories/couple-1.jpg' — the card upgrades automatically. */
+type Story = { id: number; names: string; married: string; place: string; tone: string; photo?: string };
+const successStories: Story[] = [
+  { id: 1, names: 'Their story', married: 'Arriving with launch', place: 'Delhi', tone: 'rose' },
+  { id: 2, names: 'Their story', married: 'Arriving with launch', place: 'Gurugram', tone: 'sand' },
+  { id: 3, names: 'Their story', married: 'Arriving with launch', place: 'Noida', tone: 'sage' },
+];
+
+function StoriesSection() {
+  const railRef = useRef<HTMLDivElement>(null);
+  const scrollRail = (dir: number) => {
+    const rail = railRef.current;
+    if (!rail) return;
+    const card = rail.querySelector<HTMLElement>('.story-card');
+    rail.scrollBy({ left: dir * ((card?.offsetWidth ?? 320) + 22), behavior: 'smooth' });
+  };
+  return <section className="section shell stories-section" aria-label="Happy couples of Delhi NCR">
+    <div className="section-intro reveal"><div className="eyebrow">Happy couples of Delhi NCR</div><h2>Lives that stayed <em className="stories-em">close to home.</em></h2><p>Real couples who married and built their life together in the NCR — shared here with their permission. Your story could join them.</p></div>
+    <div className="stories-rail-wrap reveal" data-reveal-delay="1">
+      <button className="rail-nav rail-nav--prev" aria-label="Previous stories" onClick={() => scrollRail(-1)}><Icon name="chevron" size={18} /></button>
+      <div className="stories-rail" ref={railRef}>
+        {successStories.map((story) => <article className="story-card" key={story.id}>
+          <div className={`story-photo story-photo--${story.tone}`}>{story.photo ? <img src={story.photo} alt={`${story.names}, married in ${story.place}`} loading="lazy" /> : <div className="story-placeholder"><Paisley size={44} /><span>With their permission,<br />photographs arrive soon</span></div>}</div>
+          <div className="story-meta"><h3>{story.names}</h3><span className="story-rule" /><small>{story.married} · {story.place}</small></div>
+        </article>)}
+      </div>
+      <button className="rail-nav rail-nav--next" aria-label="More stories" onClick={() => scrollRail(1)}><Icon name="chevron" size={18} /></button>
+    </div>
+    <p className="stories-note reveal" data-reveal-delay="2"><Icon name="shield" size={14} /> Photographs are published only with written consent, and are never part of member profiles.</p>
+  </section>;
+}
+
 function Landing({ onAuth, onOnboard, onDemo }: { onAuth: () => void; onOnboard: () => void; onDemo: () => void }) {
   useEffect(() => {
     document.documentElement.classList.add('js');
@@ -267,6 +300,8 @@ function Landing({ onAuth, onOnboard, onDemo }: { onAuth: () => void; onOnboard:
     <GotaDivider />
     <section id="how" className="section section--soft"><div className="shell flow-section"><div className="section-intro reveal"><div className="eyebrow">A simple beginning</div><h2>Meet with more context, less noise.</h2><p>Familiar matchmaking patterns, shaped around the practical realities of NCR government life.</p></div><div className="flow-grid"><div className="flow-step reveal"><span>1</span><h3>Make a private profile</h3><p>Tell us your service, NCR base, and what a shared future looks like.</p></div><div className="flow-step reveal" data-reveal-delay="1"><span>2</span><h3>See aligned profiles</h3><p>Browse relevant recommendations with clear compatibility signals.</p></div><div className="flow-step reveal" data-reveal-delay="2"><span>3</span><h3>Connect at your pace</h3><p>Shortlist, send an interest, and share details only when it feels right.</p></div></div><div className="pattern-callout reveal"><div><Icon name="spark" size={20} /><strong>Inspired by what works. Focused on what’s missing.</strong><p>Search, shortlists, privacy settings, and safe chat are familiar. Career stability is the signal that makes them more useful here.</p></div><button className="button button--dark" onClick={onDemo}>See the member home <Icon name="arrow" size={15} /></button></div></div></section>
     <section id="safety" className="section shell safety-section"><div className="safety-visual reveal"><div className="privacy-card"><div className="privacy-top"><span className="privacy-icon"><Icon name="lock" size={18} /></span><span><strong>Your privacy, your pace</strong><small>Control who sees what</small></span><span className="privacy-toggle"><i /></span></div><div className="privacy-row"><span>Detailed profile</span><strong>Matches only</strong><Icon name="chevron" size={15} /></div><div className="privacy-row"><span>Photo</span><strong>On request</strong><Icon name="chevron" size={15} /></div><div className="privacy-row"><span>Contact details</span><strong>Hidden</strong><Icon name="chevron" size={15} /></div></div></div><div className="safety-copy reveal" data-reveal-delay="1"><div className="eyebrow">A considered way to connect</div><h2>Trust is not a badge. It’s a system.</h2><p>We borrow the best safety habits from leading matrimony platforms and make them default: mobile verification, document review, photo controls, private contact details, and clear reporting.</p><div className="safety-list"><div><span><Icon name="check" size={14} /></span><p><strong>Verified before visible</strong><br /><small>Every profile starts with mobile verification and moves through a human review queue.</small></p></div><div><span><Icon name="check" size={14} /></span><p><strong>Private until mutual</strong><br /><small>Your phone and documents are never part of a public profile.</small></p></div><div><span><Icon name="check" size={14} /></span><p><strong>One free community</strong><br /><small>No premium tier to see contact details or be treated seriously.</small></p></div></div><button className="button button--text" onClick={onOnboard}>Create a profile with care <Icon name="arrow" size={15} /></button></div></section>
+    <GotaDivider />
+    <StoriesSection />
     <GotaDivider />
     <section className="cta-band"><div className="shell cta-inner"><div><div className="eyebrow eyebrow--light">For a life that fits</div><h2>Your next chapter can share the same map.</h2></div><button className="button button--light button--large" onClick={onOnboard}>Join NCRSarkariShaadi free <Icon name="arrow" size={17} /></button></div></section>
     <footer className="landing-footer shell"><Logo /><div className="footer-note">Independent platform for NCR government professionals · Not affiliated with any government department</div><div className="footer-links"><a href="#safety">Privacy</a><a href="#safety">Safety</a><a href="#how">How it works</a></div></footer>
