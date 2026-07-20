@@ -254,9 +254,9 @@ const marqueeCadres = ['CSS', 'CSSS', 'RBSS', 'AFHQCS', 'IFS · MEA', 'Lok Sabha
    e.g. photo: '/stories/couple-1.jpg' — the card upgrades automatically. */
 type Story = { id: number; names: string; married: string; place: string; tone: string; photo?: string };
 const successStories: Story[] = [
-  { id: 1, names: 'Arjun & Meera', married: 'March 2025', place: 'Delhi', tone: 'rose' },
-  { id: 2, names: 'Kabir & Ananya', married: 'November 2024', place: 'Gurugram', tone: 'sand' },
-  { id: 3, names: 'Rohit & Saanvi', married: 'February 2025', place: 'Noida', tone: 'sage' },
+  { id: 1, names: 'Arjun & Meera', married: 'March 2025', place: 'Delhi', tone: 'rose', photo: '/stories/delhi.jpg' },
+  { id: 2, names: 'Kabir & Ananya', married: 'November 2024', place: 'Gurugram', tone: 'sand', photo: '/stories/gurugram.jpg' },
+  { id: 3, names: 'Rohit & Saanvi', married: 'February 2025', place: 'Noida', tone: 'sage', photo: '/stories/noida.jpg' },
 ];
 
 /** Illustrated wedding-couple art (silhouette style) for cards without a photograph yet. */
@@ -308,7 +308,7 @@ function StoriesSection() {
       </div>
       <button className="rail-nav rail-nav--next" aria-label="More stories" onClick={() => scrollRail(1)}><Icon name="chevron" size={18} /></button>
     </div>
-    <p className="stories-note reveal" data-reveal-delay="2"><Icon name="shield" size={14} /> Representative names and artwork for the launch preview. Real photographs appear only with written consent, and are never part of member profiles.</p>
+    <p className="stories-note reveal" data-reveal-delay="2"><Icon name="shield" size={14} /> Representative visuals for the launch preview. Member photographs appear only with written consent, and are never part of public profiles.</p>
   </section>;
 }
 

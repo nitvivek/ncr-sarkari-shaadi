@@ -878,7 +878,7 @@ html.js .reveal[data-reveal-delay='3'] { transition-delay: 0.3s; }
   border-radius: 157px 157px calc(var(--r-l) - 6px) calc(var(--r-l) - 6px);
   pointer-events: none;
 }
-.story-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.story-photo img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 32%; display: block; }
 .couple-art { position: absolute; inset: 0; width: 100%; height: 100%; }
 .story-photo--rose { background: linear-gradient(170deg, #f0cfc4, #daa091); }
 .story-photo--sand { background: linear-gradient(170deg, #f2e0b8, #e0c184); }
