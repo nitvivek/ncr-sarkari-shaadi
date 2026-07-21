@@ -75,6 +75,7 @@ Strategic plan with numbered items (C = content, D = design, F = functional, W =
 | F16 | `d96a6d1` | Contact masking: `contact_share` table + `/api/contact` mutual-consent reveal (revocable). |
 | F17 | `1ae6f7f` | Block (`blocks`, hides both ways in `/api/members`) + Report (`reports`, admin-only queue) via `/api/block` + `/api/report`. |
 | UI wiring | `04a1fdc` | Member app wired to F13–F17: real Discover/Inbox/Settings/Member-modal/Admin-reports for logged-in users (demo mode unchanged). Emotional calc copy rewrite earlier: `fa1bfcc`. |
+| Handshake UI | `327fae8` | Photo-request + contact-share connect panel in member modal + owner-side photo-request approvals in Inbox. |
 
 Landing/content is DONE. The member app is now **wired to real APIs for logged-in users** (see UI-wiring row + §9). "Explore the member experience" (demo mode, no login) still shows the showcase data intentionally.
 
@@ -100,10 +101,14 @@ The member app is now real for logged-in users (demo mode via "Explore the membe
 - **Admin → Reports tab** (`AdminView`) → real `/api/report` queue with status dropdown (admin only). Verification queue stays demo (F19/R2).
 - Verified live end-to-end in-browser: discover renders real members, send-interest updates + persists, inbox shows it, settings hidden-toggle writes `hidden_profile=1`.
 
+### Photo/contact handshake UI — DONE `327fae8`
+- Member modal "connect panel": Photo Request→Requested→Available (`/api/photo-access`); Contact Share/Undo/Stop with inline reveal on mutual (`/api/contact`).
+- Inbox "Photo requests" section (owner): Approve/Decline → PATCH grant/deny.
+- Verified live in-browser both sides.
+
 ### Still to wire (smaller, optional)
-- **Photo request/approve UI** (`/api/photo-access`) — the access API exists; no UI surface yet (real photos await R2/F19 anyway).
-- **Contact "Share" handshake UI** (`/api/contact`) — reveal after mutual accept; not surfaced yet.
-- Real **profile-strength %**, message threads (open chat), and replacing the remaining demo bits (banner orbit, HomeView copy).
+- Actual **photo image bytes** (upload + display) — needs R2/F19.
+- Real **profile-strength %**, open **chat threads**, and replacing remaining demo bits (banner orbit, HomeView copy).
 
 ### API conventions to follow (match existing routes)
 - Every route: `import { getSession, db, json } from '../_lib/auth'` (adjust depth). Gate with `const s = await getSession(request); if (!s) return json({error:'…'},{status:401});`.
