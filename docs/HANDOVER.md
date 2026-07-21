@@ -77,6 +77,7 @@ Strategic plan with numbered items (C = content, D = design, F = functional, W =
 | UI wiring | `04a1fdc` | Member app wired to F13–F17: real Discover/Inbox/Settings/Member-modal/Admin-reports for logged-in users (demo mode unchanged). Emotional calc copy rewrite earlier: `fa1bfcc`. |
 | Handshake UI | `327fae8` | Photo-request + contact-share connect panel in member modal + owner-side photo-request approvals in Inbox. |
 | D12 pages | `ed4eb83` | Real /verification /privacy /safety /faq routes (server-rendered, `app/docShell.tsx` shell, per-page SEO metadata). Footer + feature CTAs wired to them. |
+| Chat | `69a3a90` | Real messaging: `messages` table + `/api/messages` (convos/thread/send) with open-model safeguards (block 403, 3-msg unreplied cap, 10 new convos/day, 2000 chars). RealInboxView two-pane chat + Interests tab; "Message" button in member modal; 10s polling. API curl-tested; UI bundle-verified. |
 | F19 + R2 | `12ad7d0` | R2 bucket `ncrsarkarishaadi-media` (binding `MEDIA`). Real photo upload/serve (`/api/photo`, gated by F14 rules) + verification doc upload/review (`/api/verify`, `/api/verify/doc`) with docs **deleted from R2 on decision**; approve sets `profiles.verified_at` (badge). ProfileView photo+verify cards; AdminView real verification queue. Backend curl-tested; UI bundle-verified — interactive UI click-through pending (browser tool was down). |
 
 Landing/content is DONE. The member app is now **wired to real APIs for logged-in users** (see UI-wiring row + §9). "Explore the member experience" (demo mode, no login) still shows the showcase data intentionally.
@@ -112,8 +113,8 @@ The member app is now real for logged-in users (demo mode via "Explore the membe
 Photos and verification docs are real now. Schema adds: `profiles.photo_key`, `verifications` table. R2 layout: `photos/<uid>`, `verify/<uid>/<govt_id|photo_id>`. Privacy invariants: photos served only via authed `/api/photo` (never public/listed); verification docs admin-only and deleted from R2 the moment a decision is made. Test cleanup must delete R2 objects too (`wrangler r2 object delete ncrsarkarishaadi-media/photos/<uid>`) — D1 cascade doesn't touch R2.
 
 ### Still to do (remaining roadmap)
-- **Interactive UI click-through of F19** (upload via ProfileView, admin approve via AdminView) once browser tool recovers — backend paths all curl-verified.
-- **W25** Government Benefits Explorer (client-side). **Parents Mode** (F30/F18), **Insights hub** (F31), open **chat threads**, real **profile-strength %**, real **M/F member counters** once real members exist.
+- **Interactive UI click-through of F19 + chat** (upload via ProfileView, admin approve, send message via inbox UI) once browser tool recovers — backend paths all curl-verified.
+- **W25** Government Benefits Explorer (client-side). **Parents Mode** (F30/F18), **Insights hub** (F31), real **profile-strength %**, real **M/F member counters** once real members exist. Possible chat upgrades later: unread badge on sidebar, push/notifications, pagination beyond 200 msgs.
 
 ### API conventions to follow (match existing routes)
 - Every route: `import { getSession, db, json } from '../_lib/auth'` (adjust depth). Gate with `const s = await getSession(request); if (!s) return json({error:'…'},{status:401});`.
