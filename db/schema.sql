@@ -72,3 +72,16 @@ CREATE TABLE IF NOT EXISTS photo_access (
 );
 CREATE INDEX IF NOT EXISTS photo_access_owner_idx ON photo_access(owner_user, status);
 CREATE INDEX IF NOT EXISTS photo_access_viewer_idx ON photo_access(viewer_user, status);
+
+-- F16: contact masking. Phone/email are never returned by member-facing
+-- endpoints; they are revealed to each other only when BOTH sides agree.
+-- One canonical row per pair (user_lo < user_hi).
+CREATE TABLE IF NOT EXISTS contact_share (
+  user_lo TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  user_hi TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  lo_agreed INTEGER NOT NULL DEFAULT 0,
+  hi_agreed INTEGER NOT NULL DEFAULT 0,
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL,
+  PRIMARY KEY (user_lo, user_hi)
+);

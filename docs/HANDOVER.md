@@ -72,6 +72,7 @@ Strategic plan with numbered items (C = content, D = design, F = functional, W =
 | F13 | `b95d170` | Interests API (send/accept/decline/withdraw) + `interests` table + `.all()` on Database type + this handover doc. |
 | F14 | `f7afe29` | Photo-privacy access layer: `profiles.photo_mode` + `photo_access` table + `/api/photo-access`. Image storage awaits R2. |
 | F15 | `797c9c8` | Hidden-profile mode (`profiles.hidden_profile`) + members directory `GET /api/members` (masks names, excludes hidden). |
+| F16 | `<pending-hash>` | Contact masking: `contact_share` table + `/api/contact` mutual-consent reveal (revocable). |
 
 Everything above **landing/content** is DONE. The member app (discover/profile/inbox/settings/admin) still shows **hardcoded demo data** — making it real is the functional work below.
 
@@ -81,7 +82,7 @@ Building the real interaction layer, one at a time. Status tracked here:
 - [x] **F13 — Interests** (send / accept / decline / withdraw). Schema `interests`, API `/api/interests`. DONE `b95d170` — API live & tested. UI wiring pending members-directory.
 - [x] **F14 — Photo privacy** (on-request, per-viewer approval, revocable). DONE `f7afe29` — `profiles.photo_mode` (on_request|verified|hidden) + `photo_access` table + `/api/photo-access` (POST request, PATCH grant/deny/revoke, GET box=requests|mine or ?owner=X→canView). Image bytes still await R2 (F19).
 - [x] **F15 — Hidden-profile mode** + members directory. DONE `797c9c8` — `profiles.hidden_profile` (0/1, settable via `/api/profile`) + `GET /api/members` (masked names, excludes hidden, hidden users still browse, optional `?gender=`). This is the real discovery endpoint F13/F14/F16 UI can build on.
-- [ ] **F16 — Contact masking** (phone/email never rendered; mutual-consent "Share" exchange).
+- [x] **F16 — Contact masking** (phone/email never rendered; mutual-consent "Share" exchange). DONE `<pending-hash>` — `contact_share` table (one row/pair, lo/hi agreement) + `/api/contact`: POST agree (agree:false to revoke), GET ?with=X → contact revealed only when both agreed. Member endpoints never return phone/email.
 - [ ] **F17 — Report / block** (confidential admin queue; block hides both ways).
 
 Companion needed for the above to be usable in UI: a real **members directory** (`GET /api/members`, respecting hidden mode + visibility). Note if/when built.
