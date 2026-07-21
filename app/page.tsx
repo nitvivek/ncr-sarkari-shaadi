@@ -302,7 +302,8 @@ function StoriesSection() {
   };
   return <section className="section shell stories-section" aria-label="Happy couples of Delhi NCR">
     <div className="section-intro reveal"><div className="eyebrow">Happy couples of Delhi NCR</div><h2>Lives that stayed <em className="stories-em">close to home.</em></h2><p>Real couples who married and built their life together in the NCR — shared here with their permission. Your story could join them.</p></div>
-    <div className="stories-rail-wrap reveal" data-reveal-delay="1">
+    <blockquote className="stories-quote reveal" data-reveal-delay="1"><Icon name="spark" size={18} /><p>“We both worked in different ministries and never imagined we’d meet — the big apps kept showing people from across the country. Here, every profile already understood the life we were trying to build.”</p><cite>Representative of the couples NCRSarkariShaadi is built for</cite></blockquote>
+    <div className="stories-rail-wrap reveal" data-reveal-delay="2">
       <button className="rail-nav rail-nav--prev" aria-label="Previous stories" onClick={() => scrollRail(-1)}><Icon name="chevron" size={18} /></button>
       <div className="stories-rail" ref={railRef}>
         {successStories.map((story) => <article className="story-card" key={story.id}>
@@ -502,6 +503,49 @@ function PrivacyPlayground() {
   </section>;
 }
 
+const neighbourhoods: Record<string, { commute: number; schools: number; quarters: number; metro: number; value: number }> = {
+  'Dwarka': { commute: 78, schools: 88, quarters: 82, metro: 90, value: 84 },
+  'R.K. Puram / Central Delhi': { commute: 96, schools: 90, quarters: 95, metro: 92, value: 60 },
+  'Noida': { commute: 74, schools: 86, quarters: 70, metro: 88, value: 80 },
+  'Gurugram': { commute: 70, schools: 90, quarters: 58, metro: 78, value: 64 },
+  'Ghaziabad': { commute: 68, schools: 76, quarters: 56, metro: 80, value: 88 },
+  'Faridabad': { commute: 66, schools: 74, quarters: 55, metro: 76, value: 90 },
+};
+const neighSignals: { key: keyof (typeof neighbourhoods)[string]; label: string }[] = [
+  { key: 'commute', label: 'Commute to central secretariat' },
+  { key: 'schools', label: 'Schools & coaching nearby' },
+  { key: 'quarters', label: 'Government quarters' },
+  { key: 'metro', label: 'Metro connectivity' },
+  { key: 'value', label: 'Value for money' },
+];
+
+function NeighbourhoodCompat() {
+  const [place, setPlace] = useState('Dwarka');
+  const data = neighbourhoods[place];
+  return <section className="section shell demo-section" aria-label="Neighbourhood compatibility across Delhi NCR">
+    <div className="section-intro reveal"><div className="eyebrow">Where in the NCR fits you both?</div><h2>Every neighbourhood is a different trade-off.</h2><p>Commute, schools, quarters, metro, cost — the right base depends on both careers. Compare NCR hubs at a glance.</p></div>
+    <div className="demo-grid reveal" data-reveal-delay="1">
+      <div className="demo-inputs"><label className="field"><span>Consider living in</span><select value={place} onChange={(e) => setPlace(e.target.value)}>{Object.keys(neighbourhoods).map((n) => <option key={n}>{n}</option>)}</select></label><p className="calc-note"><Icon name="spark" size={13} /> A broad, illustrative comparison — actual fit depends on your two specific offices and family.</p></div>
+      <div className="demo-result"><div className="demo-bars">{neighSignals.map((s) => <div className="demo-bar" key={s.key}><div className="demo-bar-top"><span>{s.label}</span><strong>{data[s.key]}%</strong></div><div className="demo-track"><i style={{ width: `${data[s.key]}%` }} /></div></div>)}</div></div>
+    </div>
+  </section>;
+}
+
+const milestones: { year: string; label: string; desc: string; icon: IconName }[] = [
+  { year: 'Year 1', label: 'Marriage', desc: 'Two verified careers, one shared NCR home from day one.', icon: 'heart' },
+  { year: 'Year 3', label: 'A home', desc: 'Buy or settle into a place you both actually commute from.', icon: 'home' },
+  { year: 'Year 5', label: 'Children', desc: 'One school, one neighbourhood — continuity from the start.', icon: 'users' },
+  { year: 'Year 10', label: 'Both promoted', desc: 'Careers progress without one chasing the other city to city.', icon: 'briefcase' },
+  { year: 'Retirement', label: 'Still together', desc: 'Two pensions, one city, a life built side by side.', icon: 'spark' },
+];
+
+function MarriageTimeline() {
+  return <section className="section shell timeline-section" aria-label="A life you can plan for">
+    <div className="section-intro reveal"><div className="eyebrow">A future you can actually plan</div><h2>Not just a match. A shared trajectory.</h2><p>When both careers stay in the NCR, the years ahead stop being a negotiation over whose posting wins. They become a plan you build together.</p></div>
+    <div className="timeline reveal" data-reveal-delay="1">{milestones.map((m, i) => <div className="timeline-node" key={m.year} data-reveal-delay={String(Math.min(3, i))}><span className="timeline-dot"><Icon name={m.icon} size={18} /></span><span className="timeline-year">{m.year}</span><strong>{m.label}</strong><small>{m.desc}</small></div>)}</div>
+  </section>;
+}
+
 function Landing({ onAuth, onOnboard, onDemo }: { onAuth: () => void; onOnboard: () => void; onDemo: () => void }) {
   useEffect(() => {
     document.documentElement.classList.add('js');
@@ -523,6 +567,7 @@ function Landing({ onAuth, onOnboard, onDemo }: { onAuth: () => void; onOnboard:
     <FreeMessagingBand onOnboard={onOnboard} />
     <section id="why" className="section shell why-section"><div className="section-intro reveal"><div className="eyebrow">The right first filter</div><h2>Compatibility is more than a checklist.</h2><p>For serving professionals, a good match has to work in real life—commutes, postings, parents, and a home you can share.</p></div><div className="feature-grid"><div className="feature-card feature-card--accent reveal"><span className="feature-number">01</span><Icon name="briefcase" size={23} /><h3>Career-aware matching</h3><p>We put service, posting flexibility, and your preferred NCR hubs at the centre of every recommendation.</p><em className="why-matters">A DANICS officer in Noida and a CSS officer in New Delhi share a commute reality a generic site simply can’t see.</em><a href="#how">See the matching logic <Icon name="arrow" size={14} /></a></div><div className="feature-card reveal" data-reveal-delay="1"><span className="feature-number">02</span><Icon name="shield" size={23} /><h3>Trust you can understand</h3><p>Identity, mobile, and service proof become clear, useful badges—not documents sitting in a dark folder.</p><em className="why-matters">In a community of public servants, identity fraud is a reputational risk — so we treat verification as seriously as you treat your service record.</em><a href="#safety">How verification works <Icon name="arrow" size={14} /></a></div><div className="feature-card reveal" data-reveal-delay="2"><span className="feature-number">03</span><Icon name="lock" size={23} /><h3>Privacy at every step</h3><p>Hide your photo, contact details, and detailed profile until you are comfortable. You decide who gets closer.</p><em className="why-matters">You share information in stages — basic first, details after interest, contact only when it feels right.</em><a href="#safety">Explore privacy controls <Icon name="arrow" size={14} /></a></div></div></section>
     <CompatibilityDemo />
+    <NeighbourhoodCompat />
     <GotaDivider />
     <section id="how" className="section section--soft"><div className="shell flow-section"><div className="section-intro reveal"><div className="eyebrow">A simple beginning</div><h2>Meet with more context, less noise.</h2><p>Familiar matchmaking patterns, shaped around the practical realities of NCR government life.</p></div><div className="flow-grid"><div className="flow-step reveal"><span>1</span><h3>Make a private profile</h3><p>Tell us your service, NCR base, and what a shared future looks like.</p></div><div className="flow-step reveal" data-reveal-delay="1"><span>2</span><h3>See aligned profiles</h3><p>Browse relevant recommendations with clear compatibility signals.</p></div><div className="flow-step reveal" data-reveal-delay="2"><span>3</span><h3>Connect at your pace</h3><p>Shortlist, send an interest, and share details only when it feels right.</p></div></div><div className="pattern-callout reveal"><div><Icon name="spark" size={20} /><strong>Inspired by what works. Focused on what’s missing.</strong><p>Search, shortlists, privacy settings, and safe chat are familiar. Career stability is the signal that makes them more useful here.</p></div><button className="button button--dark" onClick={onDemo}>See the member home <Icon name="arrow" size={15} /></button></div></div></section>
     <GotaDivider />
@@ -533,6 +578,7 @@ function Landing({ onAuth, onOnboard, onDemo }: { onAuth: () => void; onOnboard:
     <ComparisonTable />
     <GotaDivider />
     <StoriesSection />
+    <MarriageTimeline />
     <GotaDivider />
     <section className="cta-band"><div className="shell cta-inner"><div><div className="eyebrow eyebrow--light">For a life that fits</div><h2>Your next chapter can share the same map.</h2></div><button className="button button--light button--large" onClick={onOnboard}>Join NCRSarkariShaadi free <Icon name="arrow" size={17} /></button></div></section>
     <footer className="landing-footer shell"><Logo /><div className="footer-note">Independent platform for NCR government professionals · Not affiliated with any government department</div><div className="footer-links"><a href="#safety">Privacy</a><a href="#safety">Safety</a><a href="#how">How it works</a></div></footer>
