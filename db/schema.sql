@@ -119,3 +119,16 @@ CREATE TABLE IF NOT EXISTS verifications (
   reviewed_at INTEGER
 );
 CREATE INDEX IF NOT EXISTS verifications_status_idx ON verifications(status, created_at);
+
+-- Chat threads (open messaging + mandatory safeguards: block enforcement,
+-- unsolicited-message rate limits)
+CREATE TABLE IF NOT EXISTS messages (
+  id TEXT PRIMARY KEY,
+  from_user TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  to_user TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  body TEXT NOT NULL,
+  created_at INTEGER NOT NULL,
+  read_at INTEGER
+);
+CREATE INDEX IF NOT EXISTS messages_from_idx ON messages(from_user, to_user, created_at);
+CREATE INDEX IF NOT EXISTS messages_to_idx ON messages(to_user, read_at);

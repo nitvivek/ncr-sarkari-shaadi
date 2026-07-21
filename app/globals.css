@@ -1159,6 +1159,18 @@ html.js .reveal[data-reveal-delay='3'] { transition-delay: 0.3s; }
 .document-status a { color: var(--maroon); font-weight: 700; text-decoration: underline; text-decoration-color: rgba(201, 159, 63, 0.5); text-underline-offset: 3px; }
 .document-status a:hover { color: var(--sindoor); }
 
+/* real chat inbox (tabs + two panes) */
+.inbox-real { padding: 0; display: flex; flex-direction: column; height: calc(100vh - 110px); max-width: none; }
+.inbox-tabs { padding: 18px 46px 0; margin-bottom: 0; flex: none; }
+.interests-scroll { overflow: auto; flex: 1; }
+.interests-embed { padding: 26px 46px 60px; }
+.inbox-real .inbox-view { height: auto; flex: 1; min-height: 0; }
+.inbox-view--real .conversation em { max-width: 200px; }
+.chat-empty { flex: 1; display: grid; place-items: center; align-content: center; gap: 12px; color: var(--ink-muted); text-align: center; padding: 30px; }
+.chat-empty svg { color: var(--gold-deep); }
+.chat-empty p { font-size: 13.5px; max-width: 280px; margin: 0; line-height: 1.6; }
+.chat-send-err { align-self: center; color: #9c2b2b; background: #f9e9e4; border: 1px solid #ecc9bd; border-radius: 9px; padding: 8px 14px; font-size: 12.5px; margin: 0 0 8px; }
+
 .app-toast { position: fixed; left: 50%; bottom: 30px; transform: translateX(-50%); z-index: 40; background: var(--maroon-ink); color: var(--gold-pale); border: 1px solid rgba(201, 159, 63, 0.45); border-radius: 12px; padding: 13px 22px; font-size: 13.5px; font-weight: 500; box-shadow: var(--shadow-l); animation: toast-in 0.35s var(--ease-spring); }
 @keyframes toast-in { from { opacity: 0; transform: translate(-50%, 16px); } }
 
@@ -1294,6 +1306,10 @@ html.js .reveal[data-reveal-delay='3'] { transition-delay: 0.3s; }
   .pg-preview-card { flex-direction: column; text-align: center; }
   .pg-fields > div { justify-content: center; gap: 8px; }
   .app-toast { bottom: 82px; width: calc(100% - 36px); text-align: center; }
+  .inbox-real { height: calc(100vh - 90px); padding-bottom: 66px; }
+  .inbox-tabs { padding: 14px 18px 0; }
+  .interests-embed { padding: 20px 18px 40px; }
+  .inbox-real .inbox-view { padding-bottom: 0; }
   .interest-row { flex-wrap: wrap; }
   .interest-actions { width: 100%; }
   .interest-actions .button { flex: 1; }
