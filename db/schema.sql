@@ -85,3 +85,24 @@ CREATE TABLE IF NOT EXISTS contact_share (
   updated_at INTEGER NOT NULL,
   PRIMARY KEY (user_lo, user_hi)
 );
+
+-- F17: blocks (hide both ways) + reports (confidential admin queue)
+CREATE TABLE IF NOT EXISTS blocks (
+  blocker_user TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  blocked_user TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  created_at INTEGER NOT NULL,
+  PRIMARY KEY (blocker_user, blocked_user)
+);
+CREATE INDEX IF NOT EXISTS blocks_blocked_idx ON blocks(blocked_user);
+
+CREATE TABLE IF NOT EXISTS reports (
+  id TEXT PRIMARY KEY,
+  reporter_user TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  reported_user TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  reason TEXT NOT NULL, -- fake_profile | harassment | inappropriate | spam | other
+  detail TEXT,
+  status TEXT NOT NULL DEFAULT 'open', -- open | reviewed | actioned | dismissed
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS reports_status_idx ON reports(status, created_at);

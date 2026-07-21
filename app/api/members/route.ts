@@ -29,8 +29,13 @@ export async function GET(request: Request) {
   if (!session) return json({ error: 'Not signed in.' }, { status: 401 });
   const url = new URL(request.url);
   const gender = url.searchParams.get('gender');
-  const conditions = ['u.id != ?', 'COALESCE(p.hidden_profile, 0) = 0'];
-  const binds: unknown[] = [session.user_id];
+  const conditions = [
+    'u.id != ?',
+    'COALESCE(p.hidden_profile, 0) = 0',
+    'u.id NOT IN (SELECT blocked_user FROM blocks WHERE blocker_user = ?)',
+    'u.id NOT IN (SELECT blocker_user FROM blocks WHERE blocked_user = ?)',
+  ];
+  const binds: unknown[] = [session.user_id, session.user_id, session.user_id];
   if (gender === 'male' || gender === 'female') {
     conditions.push('p.gender = ?');
     binds.push(gender);
