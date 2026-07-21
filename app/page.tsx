@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 import { ministryNames, organisationsForMinistry } from './serviceData';
-import { ncrDistrictGroups, serviceCadres } from './ncrData';
+import { coreNcrHubs, ncrDistrictGroups, serviceCadres } from './ncrData';
 
 type View = 'home' | 'discover' | 'profile' | 'inbox' | 'settings' | 'admin';
 
@@ -406,6 +406,102 @@ function WomenPrivacySection() {
   </section>;
 }
 
+// ---- Client-side interactive tools (no backend; honest — they compute on the user's own input) ----
+
+function inr(n: number) {
+  if (n >= 10000000) return `₹${(n / 10000000).toFixed(1)} crore`;
+  if (n >= 100000) return `₹${(n / 100000).toFixed(1)} lakh`;
+  return `₹${Math.round(n).toLocaleString('en-IN')}`;
+}
+
+const awayCities = ['Bengaluru', 'Mumbai', 'Pune', 'Kolkata', 'Chennai', 'Hyderabad'];
+const cityAirfare: Record<string, number> = { Bengaluru: 12000, Mumbai: 10000, Pune: 11000, Kolkata: 9000, Chennai: 12000, Hyderabad: 10000 };
+const tripsPerYear: Record<string, number> = { 'Every month': 12, 'Every fortnight': 24, 'Once a quarter': 4 };
+
+function FinancialCalculator() {
+  const [city, setCity] = useState('Bengaluru');
+  const [freq, setFreq] = useState('Every month');
+  const [housing, setHousing] = useState('Rented flat');
+  const travel = tripsPerYear[freq] * cityAirfare[city];
+  const secondHome = (housing === 'Rented flat' ? 216000 : 78000) + 96000; // rent/licence fee + duplicate utilities & help
+  const yearly = travel + secondHome;
+  const invested = yearly * 45.76; // annual amount compounded ~8% p.a. over 20 years
+  return <section className="section shell calc-section" aria-label="Cost of a long-distance government marriage">
+    <div className="section-intro reveal"><div className="eyebrow">The quiet cost of two cities</div><h2>What does long-distance actually cost?</h2><p>Two homes, endless travel, and time you can’t get back. Move the sliders to see a rough picture — then imagine that redirected into one shared life in the NCR.</p></div>
+    <div className="calc-grid reveal" data-reveal-delay="1">
+      <div className="calc-inputs">
+        <label className="field"><span>If your spouse were posted in</span><select value={city} onChange={(e) => setCity(e.target.value)}>{awayCities.map((c) => <option key={c}>{c}</option>)}</select></label>
+        <label className="field"><span>You’d meet</span><select value={freq} onChange={(e) => setFreq(e.target.value)}>{Object.keys(tripsPerYear).map((f) => <option key={f}>{f}</option>)}</select></label>
+        <label className="field"><span>Second household is a</span><select value={housing} onChange={(e) => setHousing(e.target.value)}><option>Rented flat</option><option>Government quarter</option></select></label>
+      </div>
+      <div className="calc-result">
+        <div className="calc-figure"><span>Rough cost, every year</span><strong>{inr(yearly)}</strong></div>
+        <div className="calc-sub"><div><span>Over 20 years</span><strong>{inr(yearly * 20)}</strong></div><div><span>If invested instead (8% p.a.)</span><strong>{inr(invested)}</strong></div></div>
+        <p className="calc-note"><Icon name="spark" size={13} /> Illustrative estimate only — travel, rent and habits vary widely. The point isn’t the exact figure; it’s the shape of the trade-off.</p>
+      </div>
+    </div>
+  </section>;
+}
+
+function CompatibilityDemo() {
+  const [base, setBase] = useState('Delhi');
+  const [outlook, setOutlook] = useState('Stay in NCR');
+  const [parents, setParents] = useState('In Delhi NCR');
+  const stay = outlook === 'Stay in NCR';
+  const parentsNcr = parents === 'In Delhi NCR';
+  const rows: { label: string; score: number }[] = [
+    { label: 'Daily-commute compatibility', score: stay ? 94 : 82 },
+    { label: 'Transfer compatibility', score: stay ? 96 : 79 },
+    { label: 'Family alignment', score: parentsNcr ? 91 : 76 },
+    { label: 'Children’s stability', score: stay ? 93 : 81 },
+  ];
+  const overall = Math.round(rows.reduce((a, r) => a + r.score, 0) / rows.length);
+  return <section className="section shell demo-section" aria-label="See career-aware matching in action">
+    <div className="section-intro reveal"><div className="eyebrow">See it, don’t just read it</div><h2>Career-aware matching, made visible.</h2><p>Generic sites match on age and photos. We weigh the life you actually live. Adjust these and watch the signals change — this is the logic behind every recommendation.</p></div>
+    <div className="demo-grid reveal" data-reveal-delay="1">
+      <div className="demo-inputs">
+        <label className="field"><span>Your NCR base</span><select value={base} onChange={(e) => setBase(e.target.value)}>{coreNcrHubs.map((c) => <option key={c}>{c}</option>)}</select></label>
+        <label className="field"><span>Posting outlook</span><select value={outlook} onChange={(e) => setOutlook(e.target.value)}><option>Stay in NCR</option><option>Open to movement</option></select></label>
+        <label className="field"><span>Your parents are</span><select value={parents} onChange={(e) => setParents(e.target.value)}><option>In Delhi NCR</option><option>In another state</option></select></label>
+      </div>
+      <div className="demo-result">
+        <div className="demo-overall"><span className="demo-ring" style={{ '--pct': overall } as React.CSSProperties}><strong>{overall}%</strong></span><div><strong>Overall NCR alignment</strong><small>A weighted read of real-life fit — not a biodata tick-box.</small></div></div>
+        <div className="demo-bars">{rows.map((r) => <div className="demo-bar" key={r.label}><div className="demo-bar-top"><span>{r.label}</span><strong>{r.score}%</strong></div><div className="demo-track"><i style={{ width: `${r.score}%` }} /></div></div>)}</div>
+        <p className="calc-note"><Icon name="spark" size={13} /> An illustrative preview — real matches also weigh service, age, family and preferences.</p>
+      </div>
+    </div>
+  </section>;
+}
+
+function PrivacyPlayground() {
+  const [photoPublic, setPhotoPublic] = useState(false);
+  const [profilePublic, setProfilePublic] = useState(false);
+  return <section className="section shell playground-section" aria-label="See exactly what others can view">
+    <div className="section-intro reveal"><div className="eyebrow">Nothing to take on faith</div><h2>See exactly what another member can view.</h2><p>Before you register, try the controls. The panel on the right updates live to show precisely what a stranger sees — because trust should be demonstrable, not promised.</p></div>
+    <div className="playground-grid reveal" data-reveal-delay="1">
+      <div className="playground-controls">
+        <div className="pg-row"><span className="setting-symbol"><Icon name="user" size={17} /></span><span><strong>Your photo</strong><small>{photoPublic ? 'Visible to verified members' : 'On request — you approve each viewer'}</small></span><button className={`toggle ${photoPublic ? 'toggle--on' : ''}`} aria-pressed={photoPublic} aria-label="Toggle photo visibility" onClick={() => setPhotoPublic(!photoPublic)}><i /></button></div>
+        <div className="pg-row"><span className="setting-symbol"><Icon name="briefcase" size={17} /></span><span><strong>Detailed profile</strong><small>{profilePublic ? 'Visible to verified members' : 'Matches only — a limited preview otherwise'}</small></span><button className={`toggle ${profilePublic ? 'toggle--on' : ''}`} aria-pressed={profilePublic} aria-label="Toggle profile visibility" onClick={() => setProfilePublic(!profilePublic)}><i /></button></div>
+        <div className="pg-row pg-row--locked"><span className="setting-symbol"><Icon name="mail" size={17} /></span><span><strong>Phone &amp; email</strong><small>Never public — shared only by mutual consent</small></span><span className="pg-lock"><Icon name="lock" size={15} /></span></div>
+        <div className="pg-row pg-row--locked"><span className="setting-symbol"><Icon name="shield" size={17} /></span><span><strong>Verification documents</strong><small>Reviewed privately — only the badge is ever shown</small></span><span className="pg-lock"><Icon name="lock" size={15} /></span></div>
+      </div>
+      <div className="playground-preview">
+        <div className="pg-preview-label">What a stranger sees</div>
+        <div className="pg-preview-card">
+          <div className={`pg-photo ${photoPublic ? 'pg-photo--on' : ''}`}>{photoPublic ? <Icon name="user" size={26} /> : <><Icon name="lock" size={18} /><small>Photo on request</small></>}</div>
+          <div className="pg-fields">
+            <div><span>Name</span><strong>{profilePublic ? 'Priya S.' : 'P•••• S.'}</strong></div>
+            <div><span>Service</span><strong>{profilePublic ? 'CSS · Group B' : 'Government (verified)'}</strong></div>
+            <div><span>Phone</span><strong className="pg-masked">+91 ••••• •••••</strong></div>
+            <div><span>Documents</span><strong className="pg-badge"><Icon name="check" size={11} /> Verified</strong></div>
+          </div>
+        </div>
+        <p className="calc-note"><Icon name="lock" size={13} /> Contact and documents stay protected no matter which switches you flip.</p>
+      </div>
+    </div>
+  </section>;
+}
+
 function Landing({ onAuth, onOnboard, onDemo }: { onAuth: () => void; onOnboard: () => void; onDemo: () => void }) {
   useEffect(() => {
     document.documentElement.classList.add('js');
@@ -423,14 +519,17 @@ function Landing({ onAuth, onOnboard, onDemo }: { onAuth: () => void; onOnboard:
     <SpineSection onOnboard={onOnboard} />
     <GotaDivider />
     <SameCitySection />
+    <FinancialCalculator />
     <FreeMessagingBand onOnboard={onOnboard} />
     <section id="why" className="section shell why-section"><div className="section-intro reveal"><div className="eyebrow">The right first filter</div><h2>Compatibility is more than a checklist.</h2><p>For serving professionals, a good match has to work in real life—commutes, postings, parents, and a home you can share.</p></div><div className="feature-grid"><div className="feature-card feature-card--accent reveal"><span className="feature-number">01</span><Icon name="briefcase" size={23} /><h3>Career-aware matching</h3><p>We put service, posting flexibility, and your preferred NCR hubs at the centre of every recommendation.</p><em className="why-matters">A DANICS officer in Noida and a CSS officer in New Delhi share a commute reality a generic site simply can’t see.</em><a href="#how">See the matching logic <Icon name="arrow" size={14} /></a></div><div className="feature-card reveal" data-reveal-delay="1"><span className="feature-number">02</span><Icon name="shield" size={23} /><h3>Trust you can understand</h3><p>Identity, mobile, and service proof become clear, useful badges—not documents sitting in a dark folder.</p><em className="why-matters">In a community of public servants, identity fraud is a reputational risk — so we treat verification as seriously as you treat your service record.</em><a href="#safety">How verification works <Icon name="arrow" size={14} /></a></div><div className="feature-card reveal" data-reveal-delay="2"><span className="feature-number">03</span><Icon name="lock" size={23} /><h3>Privacy at every step</h3><p>Hide your photo, contact details, and detailed profile until you are comfortable. You decide who gets closer.</p><em className="why-matters">You share information in stages — basic first, details after interest, contact only when it feels right.</em><a href="#safety">Explore privacy controls <Icon name="arrow" size={14} /></a></div></div></section>
+    <CompatibilityDemo />
     <GotaDivider />
     <section id="how" className="section section--soft"><div className="shell flow-section"><div className="section-intro reveal"><div className="eyebrow">A simple beginning</div><h2>Meet with more context, less noise.</h2><p>Familiar matchmaking patterns, shaped around the practical realities of NCR government life.</p></div><div className="flow-grid"><div className="flow-step reveal"><span>1</span><h3>Make a private profile</h3><p>Tell us your service, NCR base, and what a shared future looks like.</p></div><div className="flow-step reveal" data-reveal-delay="1"><span>2</span><h3>See aligned profiles</h3><p>Browse relevant recommendations with clear compatibility signals.</p></div><div className="flow-step reveal" data-reveal-delay="2"><span>3</span><h3>Connect at your pace</h3><p>Shortlist, send an interest, and share details only when it feels right.</p></div></div><div className="pattern-callout reveal"><div><Icon name="spark" size={20} /><strong>Inspired by what works. Focused on what’s missing.</strong><p>Search, shortlists, privacy settings, and safe chat are familiar. Career stability is the signal that makes them more useful here.</p></div><button className="button button--dark" onClick={onDemo}>See the member home <Icon name="arrow" size={15} /></button></div></div></section>
     <GotaDivider />
     <VerificationPipeline />
     <section id="safety" className="section shell safety-section"><div className="safety-visual reveal"><div className="privacy-card"><div className="privacy-top"><span className="privacy-icon"><Icon name="lock" size={18} /></span><span><strong>Your privacy, your pace</strong><small>Control who sees what</small></span><span className="privacy-toggle"><i /></span></div><div className="privacy-row"><span>Detailed profile</span><strong>Matches only</strong><Icon name="chevron" size={15} /></div><div className="privacy-row"><span>Photo</span><strong>On request</strong><Icon name="chevron" size={15} /></div><div className="privacy-row"><span>Contact details</span><strong>Hidden</strong><Icon name="chevron" size={15} /></div></div></div><div className="safety-copy reveal" data-reveal-delay="1"><div className="eyebrow">A considered way to connect</div><h2>Trust is not a badge. It’s a system.</h2><p>We borrow the best safety habits from leading matrimony platforms and make them default: mobile verification, document review, photo controls, private contact details, and clear reporting.</p><div className="safety-list"><div><span><Icon name="check" size={14} /></span><p><strong>Verified before visible</strong><br /><small>Every profile starts with mobile verification and moves through a human review queue.</small></p></div><div><span><Icon name="check" size={14} /></span><p><strong>Private until mutual</strong><br /><small>Your phone and documents are never part of a public profile.</small></p></div><div><span><Icon name="check" size={14} /></span><p><strong>One free community</strong><br /><small>No premium tier to see contact details or be treated seriously.</small></p></div></div><button className="button button--text" onClick={onOnboard}>Create a profile with care <Icon name="arrow" size={15} /></button></div></section>
     <WomenPrivacySection />
+    <PrivacyPlayground />
     <ComparisonTable />
     <GotaDivider />
     <StoriesSection />
