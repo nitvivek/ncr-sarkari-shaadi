@@ -43,3 +43,16 @@ CREATE TABLE IF NOT EXISTS sessions (
 
 CREATE INDEX IF NOT EXISTS sessions_user_idx ON sessions(user_id);
 CREATE INDEX IF NOT EXISTS sessions_expiry_idx ON sessions(expires_at);
+
+-- F13: interests (send / accept / decline / withdraw)
+CREATE TABLE IF NOT EXISTS interests (
+  id TEXT PRIMARY KEY,
+  from_user TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  to_user TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  status TEXT NOT NULL DEFAULT 'pending', -- pending | accepted | declined | withdrawn
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL,
+  UNIQUE(from_user, to_user)
+);
+CREATE INDEX IF NOT EXISTS interests_to_idx ON interests(to_user, status);
+CREATE INDEX IF NOT EXISTS interests_from_idx ON interests(from_user, status);
