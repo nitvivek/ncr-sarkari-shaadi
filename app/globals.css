@@ -1109,6 +1109,30 @@ html.js .reveal[data-reveal-delay='3'] { transition-delay: 0.3s; }
 .timeline-node small { font-size: 12.5px; line-height: 1.5; color: var(--ink-soft); max-width: 200px; }
 
 /* ----------------------------------------------------------------------------
+   18e · REAL MEMBER-APP UI (interests, toast, block/report, admin status)
+---------------------------------------------------------------------------- */
+.interest-row { display: flex; align-items: center; gap: 13px; background: var(--white); border: 1px solid var(--line); border-radius: var(--r-m); padding: 15px 18px; margin-bottom: 10px; }
+.interest-who { flex: 1; min-width: 0; }
+.interest-who strong { display: block; font-family: var(--font-display); font-weight: 540; font-size: 17px; color: var(--maroon-ink); letter-spacing: -0.02em; }
+.interest-who small { display: block; font-size: 11.5px; color: var(--ink-muted); margin-top: 3px; }
+.interest-actions { display: flex; gap: 8px; flex: none; }
+.interest-badge { flex: none; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; padding: 6px 11px; border-radius: 20px; background: var(--paper-warm); color: var(--ink-muted); border: 1px solid var(--line); }
+.interest-badge--accepted { background: var(--green-soft); color: var(--green); border-color: rgba(47, 87, 68, 0.2); }
+.interest-badge--pending { background: #f6ecd8; color: var(--gold-deep); border-color: rgba(201, 159, 63, 0.3); }
+.interest-empty { background: var(--white); border: 1px dashed var(--line-strong); border-radius: var(--r-m); padding: 24px; color: var(--ink-muted); font-size: 13.5px; text-align: center; }
+
+.quick-secondary { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 14px; font-size: 12.5px; color: var(--ink-muted); }
+.quick-secondary .text-button { font-weight: 500; }
+.report-box { margin-top: 18px; }
+.report-status-select { border: 1px solid var(--line-strong); background: var(--white); border-radius: 8px; padding: 7px 10px; font-size: 12px; color: var(--ink); outline: 0; text-transform: capitalize; }
+.report-status-select:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201, 159, 63, 0.15); }
+.review-demo-note { display: flex; align-items: center; gap: 7px; color: var(--ink-muted); font-size: 11.5px; padding: 14px 19px; border-top: 1px solid var(--paper-deep); }
+.review-demo-note svg { color: var(--gold-deep); }
+
+.app-toast { position: fixed; left: 50%; bottom: 30px; transform: translateX(-50%); z-index: 40; background: var(--maroon-ink); color: var(--gold-pale); border: 1px solid rgba(201, 159, 63, 0.45); border-radius: 12px; padding: 13px 22px; font-size: 13.5px; font-weight: 500; box-shadow: var(--shadow-l); animation: toast-in 0.35s var(--ease-spring); }
+@keyframes toast-in { from { opacity: 0; transform: translate(-50%, 16px); } }
+
+/* ----------------------------------------------------------------------------
    19 · VIEW TRANSITIONS
 ---------------------------------------------------------------------------- */
 ::view-transition-old(root) { animation-duration: 0.35s; }
@@ -1209,6 +1233,10 @@ html.js .reveal[data-reveal-delay='3'] { transition-delay: 0.3s; }
   .calc-sub { grid-template-columns: 1fr 1fr; }
   .pg-preview-card { flex-direction: column; text-align: center; }
   .pg-fields > div { justify-content: center; gap: 8px; }
+  .app-toast { bottom: 82px; width: calc(100% - 36px); text-align: center; }
+  .interest-row { flex-wrap: wrap; }
+  .interest-actions { width: 100%; }
+  .interest-actions .button { flex: 1; }
   .timeline { grid-template-columns: 1fr; gap: 30px; }
   .timeline::before { left: 50%; right: auto; top: 6%; bottom: 6%; width: 2px; height: auto; transform: translateX(-50%); }
   .timeline-node small { max-width: 260px; }

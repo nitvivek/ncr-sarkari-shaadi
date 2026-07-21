@@ -74,6 +74,7 @@ Strategic plan with numbered items (C = content, D = design, F = functional, W =
 | F15 | `797c9c8` | Hidden-profile mode (`profiles.hidden_profile`) + members directory `GET /api/members` (masks names, excludes hidden). |
 | F16 | `d96a6d1` | Contact masking: `contact_share` table + `/api/contact` mutual-consent reveal (revocable). |
 | F17 | `1ae6f7f` | Block (`blocks`, hides both ways in `/api/members`) + Report (`reports`, admin-only queue) via `/api/block` + `/api/report`. |
+| UI wiring | `<pending-hash>` | Member app wired to F13–F17: real Discover/Inbox/Settings/Member-modal/Admin-reports for logged-in users (demo mode unchanged). Emotional calc copy rewrite earlier: `fa1bfcc`. |
 
 Everything above **landing/content** is DONE. The member app (discover/profile/inbox/settings/admin) still shows **hardcoded demo data** — making it real is the functional work below.
 
@@ -86,11 +87,23 @@ Building the real interaction layer, one at a time. Status tracked here:
 - [x] **F16 — Contact masking** (phone/email never rendered; mutual-consent "Share" exchange). DONE `d96a6d1` — `contact_share` table (one row/pair, lo/hi agreement) + `/api/contact`: POST agree (agree:false to revoke), GET ?with=X → contact revealed only when both agreed. Member endpoints never return phone/email.
 - [x] **F17 — Report / block** (confidential admin queue; block hides both ways). DONE `1ae6f7f` — `blocks` + `reports` tables; `/api/block` (POST block/unblock, GET my blocks); `/api/report` (POST any member, GET+PATCH admin-only via `session.role==='admin'`). `/api/members` now also excludes blocked users both directions.
 
-**F13–F17 API layer is COMPLETE and tested.** What remains for these to be user-visible:
-- A real **Discover UI** wired to `GET /api/members` (currently the member app still shows hardcoded demo people in `app/page.tsx` — `matches`, `conversations`, admin `queue` arrays).
-- Buttons wired to the endpoints: Send interest → `/api/interests`; photo request/approve → `/api/photo-access`; hide toggle → `/api/profile {hidden_profile}`; Share contact → `/api/contact`; Block/Report → `/api/block` `/api/report`.
-- Admin **Reports** tab wired to `/api/report` (admin queue).
-- Settings toggles (`SettingsView`) currently client-only — back them with `/api/profile` (hidden_profile, photo_mode) and the photo-access/contact endpoints.
+**F13–F17 API layer is COMPLETE and tested.**
+
+### UI wiring — DONE `<pending-hash>`
+The member app is now real for logged-in users (demo mode via "Explore the member experience" still shows the showcase). In `app/page.tsx`, `AppShell` fetches real data and switches on `user`:
+- **Discover** (`RealDiscoverView`) → `GET /api/members` with gender filter; cards show masked name/service/city/verified.
+- **Send interest** → `POST /api/interests`; button reflects pending/accepted; toast feedback.
+- **Inbox** (`InterestsInbox`) → received (accept/decline via PATCH) + sent (status).
+- **Member modal** (`MemberModal`) → send interest + **Block** (`/api/block`) + **Report** (`/api/report`, reason picker).
+- **Settings** → hidden-profile & photo toggles persist via `PUT /api/profile` (`hidden_profile`, `photo_mode`).
+- **Home** → shows up to 3 real members when available.
+- **Admin → Reports tab** (`AdminView`) → real `/api/report` queue with status dropdown (admin only). Verification queue stays demo (F19/R2).
+- Verified live end-to-end in-browser: discover renders real members, send-interest updates + persists, inbox shows it, settings hidden-toggle writes `hidden_profile=1`.
+
+### Still to wire (smaller, optional)
+- **Photo request/approve UI** (`/api/photo-access`) — the access API exists; no UI surface yet (real photos await R2/F19 anyway).
+- **Contact "Share" handshake UI** (`/api/contact`) — reveal after mutual accept; not surfaced yet.
+- Real **profile-strength %**, message threads (open chat), and replacing the remaining demo bits (banner orbit, HomeView copy).
 
 ### API conventions to follow (match existing routes)
 - Every route: `import { getSession, db, json } from '../_lib/auth'` (adjust depth). Gate with `const s = await getSession(request); if (!s) return json({error:'…'},{status:401});`.
