@@ -73,7 +73,7 @@ Strategic plan with numbered items (C = content, D = design, F = functional, W =
 | F14 | `f7afe29` | Photo-privacy access layer: `profiles.photo_mode` + `photo_access` table + `/api/photo-access`. Image storage awaits R2. |
 | F15 | `797c9c8` | Hidden-profile mode (`profiles.hidden_profile`) + members directory `GET /api/members` (masks names, excludes hidden). |
 | F16 | `d96a6d1` | Contact masking: `contact_share` table + `/api/contact` mutual-consent reveal (revocable). |
-| F17 | `<pending-hash>` | Block (`blocks`, hides both ways in `/api/members`) + Report (`reports`, admin-only queue) via `/api/block` + `/api/report`. |
+| F17 | `1ae6f7f` | Block (`blocks`, hides both ways in `/api/members`) + Report (`reports`, admin-only queue) via `/api/block` + `/api/report`. |
 
 Everything above **landing/content** is DONE. The member app (discover/profile/inbox/settings/admin) still shows **hardcoded demo data** — making it real is the functional work below.
 
@@ -84,7 +84,7 @@ Building the real interaction layer, one at a time. Status tracked here:
 - [x] **F14 — Photo privacy** (on-request, per-viewer approval, revocable). DONE `f7afe29` — `profiles.photo_mode` (on_request|verified|hidden) + `photo_access` table + `/api/photo-access` (POST request, PATCH grant/deny/revoke, GET box=requests|mine or ?owner=X→canView). Image bytes still await R2 (F19).
 - [x] **F15 — Hidden-profile mode** + members directory. DONE `797c9c8` — `profiles.hidden_profile` (0/1, settable via `/api/profile`) + `GET /api/members` (masked names, excludes hidden, hidden users still browse, optional `?gender=`). This is the real discovery endpoint F13/F14/F16 UI can build on.
 - [x] **F16 — Contact masking** (phone/email never rendered; mutual-consent "Share" exchange). DONE `d96a6d1` — `contact_share` table (one row/pair, lo/hi agreement) + `/api/contact`: POST agree (agree:false to revoke), GET ?with=X → contact revealed only when both agreed. Member endpoints never return phone/email.
-- [x] **F17 — Report / block** (confidential admin queue; block hides both ways). DONE `<pending-hash>` — `blocks` + `reports` tables; `/api/block` (POST block/unblock, GET my blocks); `/api/report` (POST any member, GET+PATCH admin-only via `session.role==='admin'`). `/api/members` now also excludes blocked users both directions.
+- [x] **F17 — Report / block** (confidential admin queue; block hides both ways). DONE `1ae6f7f` — `blocks` + `reports` tables; `/api/block` (POST block/unblock, GET my blocks); `/api/report` (POST any member, GET+PATCH admin-only via `session.role==='admin'`). `/api/members` now also excludes blocked users both directions.
 
 **F13–F17 API layer is COMPLETE and tested.** What remains for these to be user-visible:
 - A real **Discover UI** wired to `GET /api/members` (currently the member app still shows hardcoded demo people in `app/page.tsx` — `matches`, `conversations`, admin `queue` arrays).
