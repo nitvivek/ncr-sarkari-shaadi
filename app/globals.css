@@ -999,6 +999,39 @@ html.js .reveal[data-reveal-delay='3'] { transition-delay: 0.3s; }
    18d · CLIENT-SIDE INTERACTIVE TOOLS (calculator, demo, playground)
 ---------------------------------------------------------------------------- */
 .calc-section .section-intro, .demo-section .section-intro, .playground-section .section-intro { max-width: 660px; }
+.calc-section .section-intro p { margin: 14px 0 0; }
+.calc-section .section-intro p:first-of-type { margin-top: 18px; }
+
+.calc-lead {
+  margin: 44px 0 0;
+  padding: 26px 30px;
+  border-radius: var(--r-l);
+  background: linear-gradient(170deg, #f6e7cd, #efd8b0);
+  border: 1px solid rgba(201, 159, 63, 0.5);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 540;
+  font-variation-settings: 'SOFT' 55, 'WONK' 1;
+  font-size: clamp(19px, 2.1vw, 25px);
+  line-height: 1.45;
+  letter-spacing: -0.015em;
+  color: var(--maroon-ink);
+  text-align: center;
+}
+
+.calc-closing {
+  margin: 26px 0 0;
+  padding: 20px 26px;
+  border-radius: var(--r-m);
+  background: var(--maroon-ink);
+  color: var(--gold-pale);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(16px, 1.6vw, 19px);
+  line-height: 1.5;
+  text-align: center;
+  border: 1px solid rgba(201, 159, 63, 0.4);
+}
 
 /* shared two-panel layout */
 .calc-grid, .demo-grid, .playground-grid { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 22px; margin-top: 50px; align-items: stretch; }

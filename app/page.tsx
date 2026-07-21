@@ -428,7 +428,8 @@ function FinancialCalculator() {
   const yearly = travel + secondHome;
   const invested = yearly * 45.76; // annual amount compounded ~8% p.a. over 20 years
   return <section className="section shell calc-section" aria-label="Cost of a long-distance government marriage">
-    <div className="section-intro reveal"><div className="eyebrow">The quiet cost of two cities</div><h2>What does long-distance actually cost?</h2><p>Two homes, endless travel, and time you can’t get back. Move the sliders to see a rough picture — then imagine that redirected into one shared life in the NCR.</p></div>
+    <div className="section-intro reveal"><div className="eyebrow">The quiet cost of two cities</div><h2>What does living apart really cost?</h2><p>Marriage is not meant to be lived between phone calls, weekend flights and countdowns to the next meeting.</p><p>It is the morning tea together. Coming home to each other after a difficult day. Sharing dinner, raising children, caring for parents, celebrating ordinary moments — and simply knowing that your partner is there.</p><p>When two careers keep a couple in different cities, the cost isn’t only two homes and endless travel. Togetherness suffers. The bond gets less everyday time. And years meant to be lived together can quietly become years spent waiting to be together.</p><p>There is a financial cost too. Use the calculator below to see a rough estimate of what maintaining two lives may cost — but remember, the most valuable things lost to distance can never be calculated in rupees.</p></div>
+    <p className="calc-lead reveal" data-reveal-delay="1">You aren’t choosing between two cities. You may be choosing how much of your married life you actually get to live together.</p>
     <div className="calc-grid reveal" data-reveal-delay="1">
       <div className="calc-inputs">
         <label className="field"><span>If your spouse were posted in</span><select value={city} onChange={(e) => setCity(e.target.value)}>{awayCities.map((c) => <option key={c}>{c}</option>)}</select></label>
@@ -441,6 +442,7 @@ function FinancialCalculator() {
         <p className="calc-note"><Icon name="spark" size={13} /> Illustrative estimate only — travel, rent and habits vary widely. The point isn’t the exact figure; it’s the shape of the trade-off.</p>
       </div>
     </div>
+    <p className="calc-closing reveal" data-reveal-delay="2">Some costs appear in your bank account. Others appear in the moments you never got to share.</p>
   </section>;
 }
 
