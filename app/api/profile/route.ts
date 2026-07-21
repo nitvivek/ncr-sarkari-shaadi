@@ -42,6 +42,13 @@ export async function PUT(request: Request) {
     updates.push(`${field} = ?`);
     values.push(value === '' ? null : value);
   }
+  for (const field of ['hidden_profile', 'profile_visible'] as const) {
+    if (!(field in body)) continue;
+    const value = body[field];
+    if (value !== 0 && value !== 1 && value !== true && value !== false) return json({ error: `Invalid value for ${field}.` }, { status: 400 });
+    updates.push(`${field} = ?`);
+    values.push(value ? 1 : 0);
+  }
   if (updates.length === 0) return json({ error: 'Nothing to update.' }, { status: 400 });
   const now = Math.floor(Date.now() / 1000);
   await db().prepare(`UPDATE profiles SET ${updates.join(', ')}, updated_at = ? WHERE user_id = ?`).bind(...values, now, session.user_id).run();

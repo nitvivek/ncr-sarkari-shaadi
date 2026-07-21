@@ -70,7 +70,8 @@ Strategic plan with numbered items (C = content, D = design, F = functional, W =
 | Wave 1 | `5f72ee5` | Emotion-first landing rebuild + dropped arch shape. New sections: two-careers-one-life spine, same-city split-screen, free-messaging band, verification pipeline, women-in-govt, comparison table, why-it-matters lines, SEO meta. |
 | Wave 2 | `6baaae0`, `a1bf85c` | Client-side interactive tools: Financial Advantage Calculator, Compatibility Demo, Privacy Playground, Neighbourhood Compatibility, Marriage-Readiness Timeline, representative testimonial. |
 | F13 | `b95d170` | Interests API (send/accept/decline/withdraw) + `interests` table + `.all()` on Database type + this handover doc. |
-| F14 | `5f72a89` | Photo-privacy access layer: `profiles.photo_mode` + `photo_access` table + `/api/photo-access`. Image storage awaits R2. |
+| F14 | `f7afe29` | Photo-privacy access layer: `profiles.photo_mode` + `photo_access` table + `/api/photo-access`. Image storage awaits R2. |
+| F15 | `<pending-hash>` | Hidden-profile mode (`profiles.hidden_profile`) + members directory `GET /api/members` (masks names, excludes hidden). |
 
 Everything above **landing/content** is DONE. The member app (discover/profile/inbox/settings/admin) still shows **hardcoded demo data** — making it real is the functional work below.
 
@@ -78,8 +79,8 @@ Everything above **landing/content** is DONE. The member app (discover/profile/i
 Building the real interaction layer, one at a time. Status tracked here:
 
 - [x] **F13 — Interests** (send / accept / decline / withdraw). Schema `interests`, API `/api/interests`. DONE `b95d170` — API live & tested. UI wiring pending members-directory.
-- [x] **F14 — Photo privacy** (on-request, per-viewer approval, revocable). DONE `5f72a89` — `profiles.photo_mode` (on_request|verified|hidden) + `photo_access` table + `/api/photo-access` (POST request, PATCH grant/deny/revoke, GET box=requests|mine or ?owner=X→canView). Image bytes still await R2 (F19).
-- [ ] **F15 — Hidden-profile mode** (functional; hidden ⇒ not discoverable; owner still browses).
+- [x] **F14 — Photo privacy** (on-request, per-viewer approval, revocable). DONE `f7afe29` — `profiles.photo_mode` (on_request|verified|hidden) + `photo_access` table + `/api/photo-access` (POST request, PATCH grant/deny/revoke, GET box=requests|mine or ?owner=X→canView). Image bytes still await R2 (F19).
+- [x] **F15 — Hidden-profile mode** + members directory. DONE `<pending-hash>` — `profiles.hidden_profile` (0/1, settable via `/api/profile`) + `GET /api/members` (masked names, excludes hidden, hidden users still browse, optional `?gender=`). This is the real discovery endpoint F13/F14/F16 UI can build on.
 - [ ] **F16 — Contact masking** (phone/email never rendered; mutual-consent "Share" exchange).
 - [ ] **F17 — Report / block** (confidential admin queue; block hides both ways).
 

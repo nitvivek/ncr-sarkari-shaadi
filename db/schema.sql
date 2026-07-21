@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS profiles (
   posting_city TEXT,
   posting_district TEXT,
   profile_visible INTEGER NOT NULL DEFAULT 0,
+  hidden_profile INTEGER NOT NULL DEFAULT 0, -- F15: 1 = hidden from discovery/search
   photo_mode TEXT NOT NULL DEFAULT 'on_request', -- on_request | verified | hidden
   verified_at INTEGER,
   created_at INTEGER NOT NULL,
