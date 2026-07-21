@@ -74,7 +74,7 @@ Strategic plan with numbered items (C = content, D = design, F = functional, W =
 | F15 | `797c9c8` | Hidden-profile mode (`profiles.hidden_profile`) + members directory `GET /api/members` (masks names, excludes hidden). |
 | F16 | `d96a6d1` | Contact masking: `contact_share` table + `/api/contact` mutual-consent reveal (revocable). |
 | F17 | `1ae6f7f` | Block (`blocks`, hides both ways in `/api/members`) + Report (`reports`, admin-only queue) via `/api/block` + `/api/report`. |
-| UI wiring | `<pending-hash>` | Member app wired to F13–F17: real Discover/Inbox/Settings/Member-modal/Admin-reports for logged-in users (demo mode unchanged). Emotional calc copy rewrite earlier: `fa1bfcc`. |
+| UI wiring | `04a1fdc` | Member app wired to F13–F17: real Discover/Inbox/Settings/Member-modal/Admin-reports for logged-in users (demo mode unchanged). Emotional calc copy rewrite earlier: `fa1bfcc`. |
 
 Everything above **landing/content** is DONE. The member app (discover/profile/inbox/settings/admin) still shows **hardcoded demo data** — making it real is the functional work below.
 
@@ -89,7 +89,7 @@ Building the real interaction layer, one at a time. Status tracked here:
 
 **F13–F17 API layer is COMPLETE and tested.**
 
-### UI wiring — DONE `<pending-hash>`
+### UI wiring — DONE `04a1fdc`
 The member app is now real for logged-in users (demo mode via "Explore the member experience" still shows the showcase). In `app/page.tsx`, `AppShell` fetches real data and switches on `user`:
 - **Discover** (`RealDiscoverView`) → `GET /api/members` with gender filter; cards show masked name/service/city/verified.
 - **Send interest** → `POST /api/interests`; button reflects pending/accepted; toast feedback.
