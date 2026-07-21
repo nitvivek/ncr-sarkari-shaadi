@@ -76,6 +76,7 @@ Strategic plan with numbered items (C = content, D = design, F = functional, W =
 | F17 | `1ae6f7f` | Block (`blocks`, hides both ways in `/api/members`) + Report (`reports`, admin-only queue) via `/api/block` + `/api/report`. |
 | UI wiring | `04a1fdc` | Member app wired to F13–F17: real Discover/Inbox/Settings/Member-modal/Admin-reports for logged-in users (demo mode unchanged). Emotional calc copy rewrite earlier: `fa1bfcc`. |
 | Handshake UI | `327fae8` | Photo-request + contact-share connect panel in member modal + owner-side photo-request approvals in Inbox. |
+| D12 pages | `ed4eb83` | Real /verification /privacy /safety /faq routes (server-rendered, `app/docShell.tsx` shell, per-page SEO metadata). Footer + feature CTAs wired to them. |
 
 Landing/content is DONE. The member app is now **wired to real APIs for logged-in users** (see UI-wiring row + §9). "Explore the member experience" (demo mode, no login) still shows the showcase data intentionally.
 
