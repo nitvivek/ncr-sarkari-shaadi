@@ -18,7 +18,7 @@ type ProfileRow = {
   verified_at: number | null;
 };
 
-const editableFields = ['gender', 'created_for', 'ministry', 'organisation', 'service', 'posting_outlook', 'preferred_hubs', 'about', 'residence_city', 'residence_district', 'posting_city', 'posting_district'] as const;
+const editableFields = ['gender', 'created_for', 'ministry', 'organisation', 'service', 'posting_outlook', 'preferred_hubs', 'about', 'residence_city', 'residence_district', 'posting_city', 'posting_district', 'photo_mode'] as const;
 
 export async function GET(request: Request) {
   const session = await getSession(request);

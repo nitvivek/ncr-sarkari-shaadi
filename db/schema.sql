@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS profiles (
   posting_city TEXT,
   posting_district TEXT,
   profile_visible INTEGER NOT NULL DEFAULT 0,
+  photo_mode TEXT NOT NULL DEFAULT 'on_request', -- on_request | verified | hidden
   verified_at INTEGER,
   created_at INTEGER NOT NULL,
   updated_at INTEGER NOT NULL
@@ -56,3 +57,17 @@ CREATE TABLE IF NOT EXISTS interests (
 );
 CREATE INDEX IF NOT EXISTS interests_to_idx ON interests(to_user, status);
 CREATE INDEX IF NOT EXISTS interests_from_idx ON interests(from_user, status);
+
+-- F14: photo privacy. profiles.photo_mode: on_request | verified | hidden
+-- (image bytes themselves live in R2 later — F19; this is the access layer)
+CREATE TABLE IF NOT EXISTS photo_access (
+  id TEXT PRIMARY KEY,
+  owner_user TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  viewer_user TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  status TEXT NOT NULL DEFAULT 'requested', -- requested | granted | denied | revoked
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL,
+  UNIQUE(owner_user, viewer_user)
+);
+CREATE INDEX IF NOT EXISTS photo_access_owner_idx ON photo_access(owner_user, status);
+CREATE INDEX IF NOT EXISTS photo_access_viewer_idx ON photo_access(viewer_user, status);
