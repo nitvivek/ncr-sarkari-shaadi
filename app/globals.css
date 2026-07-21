@@ -1141,6 +1141,24 @@ html.js .reveal[data-reveal-delay='3'] { transition-delay: 0.3s; }
 .connect-state--ok { color: var(--green); }
 .connect-reveal { display: flex; align-items: center; gap: 8px; padding: 13px 16px; background: var(--green-soft); color: var(--green); font-size: 13.5px; font-weight: 600; border-top: 1px solid rgba(47, 87, 68, 0.15); }
 
+/* F19 — real photos + verification upload */
+.member-photo { width: 100%; height: 100%; min-height: 138px; object-fit: cover; object-position: 50% 30%; display: block; }
+.member-photo--modal { width: 84px; height: 84px; min-height: 0; border-radius: 50%; border: 2px solid rgba(201, 159, 63, 0.5); flex: none; }
+.profile-photo-preview { width: 116px; height: 116px; border-radius: 50%; object-fit: cover; object-position: 50% 30%; border: 2px solid rgba(201, 159, 63, 0.5); display: block; margin: 18px 0 4px; }
+.profile-photo-empty { width: 116px; height: 116px; border-radius: 50%; border: 1px dashed var(--line-strong); background: var(--paper-warm); color: var(--ink-muted); display: grid; place-items: center; align-content: center; gap: 6px; margin: 18px 0 4px; text-align: center; }
+.profile-photo-empty small { font-size: 10.5px; }
+.photo-actions { display: flex; gap: 8px; margin-top: 12px; }
+.photo-upload-label { position: relative; overflow: hidden; cursor: pointer; }
+.photo-upload-label input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.photo-msg { font-size: 12px; color: var(--ink-muted); line-height: 1.5; margin: 12px 0 0; }
+.verify-card .verify-file { display: block; margin: 12px 0; }
+.verify-card .verify-file span { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gold-deep); margin-bottom: 6px; }
+.verify-card .verify-file input { width: 100%; font-size: 12px; color: var(--ink-soft); }
+.verify-card .verify-file input::file-selector-button { border: 1px solid var(--line-strong); background: var(--white); border-radius: 8px; padding: 7px 12px; margin-right: 10px; font: inherit; font-size: 12px; color: var(--maroon-deep); cursor: pointer; }
+.verify-card .button--primary { margin-top: 6px; }
+.document-status a { color: var(--maroon); font-weight: 700; text-decoration: underline; text-decoration-color: rgba(201, 159, 63, 0.5); text-underline-offset: 3px; }
+.document-status a:hover { color: var(--sindoor); }
+
 .app-toast { position: fixed; left: 50%; bottom: 30px; transform: translateX(-50%); z-index: 40; background: var(--maroon-ink); color: var(--gold-pale); border: 1px solid rgba(201, 159, 63, 0.45); border-radius: 12px; padding: 13px 22px; font-size: 13.5px; font-weight: 500; box-shadow: var(--shadow-l); animation: toast-in 0.35s var(--ease-spring); }
 @keyframes toast-in { from { opacity: 0; transform: translate(-50%, 16px); } }
 

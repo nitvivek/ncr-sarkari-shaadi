@@ -20,5 +20,11 @@
       "database_name": "ncrsarkariishaadi-db",
       "database_id": "6fc2c188-023e-461a-9583-d942ee188ac2"
     }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "MEDIA",
+      "bucket_name": "ncrsarkarishaadi-media"
+    }
   ]
 }

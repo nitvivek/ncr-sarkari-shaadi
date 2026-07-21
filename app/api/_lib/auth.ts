@@ -10,7 +10,15 @@ type Database = {
   };
 };
 
+type R2Object = { body: ReadableStream; httpMetadata?: { contentType?: string }; size: number };
+type R2Bucket = {
+  put(key: string, value: ArrayBuffer | ReadableStream, options?: { httpMetadata?: { contentType?: string } }): Promise<unknown>;
+  get(key: string): Promise<R2Object | null>;
+  delete(key: string): Promise<void>;
+};
+
 const db = () => (env as unknown as { DB: Database }).DB;
+const r2 = () => (env as unknown as { MEDIA: R2Bucket }).MEDIA;
 const textEncoder = new TextEncoder();
 
 // Accounts registered with these emails are granted the admin role.
@@ -71,4 +79,4 @@ export function json(data: unknown, init: ResponseInit = {}) {
   return new Response(JSON.stringify(data), { ...init, headers: { 'content-type': 'application/json; charset=utf-8', ...(init.headers ?? {}) } });
 }
 
-export { db };
+export { db, r2 };

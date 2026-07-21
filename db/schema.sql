@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS profiles (
   profile_visible INTEGER NOT NULL DEFAULT 0,
   hidden_profile INTEGER NOT NULL DEFAULT 0, -- F15: 1 = hidden from discovery/search
   photo_mode TEXT NOT NULL DEFAULT 'on_request', -- on_request | verified | hidden
+  photo_key TEXT, -- F19: R2 object key of the profile photo (null = none)
   verified_at INTEGER,
   created_at INTEGER NOT NULL,
   updated_at INTEGER NOT NULL
@@ -106,3 +107,15 @@ CREATE TABLE IF NOT EXISTS reports (
   updated_at INTEGER NOT NULL
 );
 CREATE INDEX IF NOT EXISTS reports_status_idx ON reports(status, created_at);
+
+-- F19: verification document submissions (docs live in R2, deleted after review)
+CREATE TABLE IF NOT EXISTS verifications (
+  user_id TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+  govt_id_key TEXT,
+  photo_id_key TEXT,
+  status TEXT NOT NULL DEFAULT 'pending', -- pending | approved | rejected
+  note TEXT,
+  created_at INTEGER NOT NULL,
+  reviewed_at INTEGER
+);
+CREATE INDEX IF NOT EXISTS verifications_status_idx ON verifications(status, created_at);
