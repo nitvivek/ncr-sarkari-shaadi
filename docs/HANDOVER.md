@@ -76,7 +76,7 @@ Strategic plan with numbered items (C = content, D = design, F = functional, W =
 | F17 | `1ae6f7f` | Block (`blocks`, hides both ways in `/api/members`) + Report (`reports`, admin-only queue) via `/api/block` + `/api/report`. |
 | UI wiring | `04a1fdc` | Member app wired to F13–F17: real Discover/Inbox/Settings/Member-modal/Admin-reports for logged-in users (demo mode unchanged). Emotional calc copy rewrite earlier: `fa1bfcc`. |
 
-Everything above **landing/content** is DONE. The member app (discover/profile/inbox/settings/admin) still shows **hardcoded demo data** — making it real is the functional work below.
+Landing/content is DONE. The member app is now **wired to real APIs for logged-in users** (see UI-wiring row + §9). "Explore the member experience" (demo mode, no login) still shows the showcase data intentionally.
 
 ## 9. Functional roadmap — F13–F17 (IN PROGRESS)
 Building the real interaction layer, one at a time. Status tracked here:
