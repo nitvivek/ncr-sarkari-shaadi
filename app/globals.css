@@ -1145,6 +1145,36 @@ html.js .reveal[data-reveal-delay='3'] { transition-delay: 0.3s; }
 @keyframes toast-in { from { opacity: 0; transform: translate(-50%, 16px); } }
 
 /* ----------------------------------------------------------------------------
+   18f · STATIC CONTENT PAGES (verification / privacy / safety / faq)
+---------------------------------------------------------------------------- */
+.doc-page { min-height: 100vh; display: flex; flex-direction: column; }
+.doc-page .landing-footer { margin-top: auto; }
+.doc { max-width: 820px; padding: 30px 0 90px; }
+.doc-head { margin-bottom: 12px; }
+.doc-title { font-family: var(--font-display); font-size: clamp(38px, 5vw, 60px); font-weight: 540; letter-spacing: -0.045em; line-height: 1.02; color: var(--maroon-ink); margin: 16px 0 18px; }
+.doc-lede { font-size: 18px; line-height: 1.7; color: var(--ink-soft); max-width: 660px; margin: 0; }
+.doc-section { margin-top: 46px; }
+.doc-section h2 { font-family: var(--font-display); font-size: 28px; font-weight: 540; letter-spacing: -0.035em; color: var(--maroon-ink); margin: 0 0 14px; }
+.doc-section p { font-size: 15.5px; line-height: 1.72; color: var(--ink-soft); margin: 0 0 14px; max-width: 680px; }
+.doc-list { list-style: none; padding: 0; margin: 16px 0; display: grid; gap: 13px; }
+.doc-list li { display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.55; color: var(--ink-soft); max-width: 680px; }
+.doc-list li svg { color: var(--green); flex: none; margin-top: 3px; }
+.doc-list strong { color: var(--ink); }
+.doc-callout { background: var(--paper-warm); border: 1px solid rgba(201, 159, 63, 0.4); border-radius: var(--r-l); padding: 22px 26px; margin: 24px 0; font-size: 14.5px; line-height: 1.62; color: var(--ink-soft); max-width: 680px; }
+.doc-callout strong { color: var(--maroon-ink); }
+.doc-section .button { margin-top: 8px; }
+.doc-page .pipeline { margin-top: 26px; }
+
+.faq-list { display: grid; gap: 12px; margin-top: 26px; }
+.faq-item { border: 1px solid var(--line); border-radius: var(--r-m); background: var(--white); overflow: hidden; }
+.faq-item summary { cursor: pointer; padding: 18px 22px; font-family: var(--font-display); font-size: 18px; font-weight: 540; letter-spacing: -0.02em; color: var(--maroon-ink); list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 14px; }
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::after { content: '+'; font-family: var(--font-body); font-weight: 400; color: var(--gold-deep); font-size: 24px; line-height: 1; flex: none; }
+.faq-item[open] summary::after { content: '\2013'; }
+.faq-item[open] summary { color: var(--sindoor); }
+.faq-item p { margin: 0; padding: 0 22px 20px; font-size: 14.5px; line-height: 1.68; color: var(--ink-soft); }
+
+/* ----------------------------------------------------------------------------
    19 · VIEW TRANSITIONS
 ---------------------------------------------------------------------------- */
 ::view-transition-old(root) { animation-duration: 0.35s; }
