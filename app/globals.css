@@ -1129,6 +1129,18 @@ html.js .reveal[data-reveal-delay='3'] { transition-delay: 0.3s; }
 .review-demo-note { display: flex; align-items: center; gap: 7px; color: var(--ink-muted); font-size: 11.5px; padding: 14px 19px; border-top: 1px solid var(--paper-deep); }
 .review-demo-note svg { color: var(--gold-deep); }
 
+/* connect panel (photo request + contact share) in member modal */
+.connect-panel { margin: 20px 0 0; border: 1px solid var(--line); border-radius: var(--r-m); background: var(--paper-warm); overflow: hidden; }
+.connect-row { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--line); }
+.connect-row:last-child { border-bottom: 0; }
+.connect-icon { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 9px; background: var(--white); color: var(--maroon); border: 1px solid var(--line); flex: none; }
+.connect-text { flex: 1; min-width: 0; }
+.connect-text strong { display: block; font-size: 13px; }
+.connect-text small { display: block; font-size: 11px; color: var(--ink-muted); margin-top: 2px; line-height: 1.4; }
+.connect-state { flex: none; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-muted); display: inline-flex; align-items: center; gap: 4px; }
+.connect-state--ok { color: var(--green); }
+.connect-reveal { display: flex; align-items: center; gap: 8px; padding: 13px 16px; background: var(--green-soft); color: var(--green); font-size: 13.5px; font-weight: 600; border-top: 1px solid rgba(47, 87, 68, 0.15); }
+
 .app-toast { position: fixed; left: 50%; bottom: 30px; transform: translateX(-50%); z-index: 40; background: var(--maroon-ink); color: var(--gold-pale); border: 1px solid rgba(201, 159, 63, 0.45); border-radius: 12px; padding: 13px 22px; font-size: 13.5px; font-weight: 500; box-shadow: var(--shadow-l); animation: toast-in 0.35s var(--ease-spring); }
 @keyframes toast-in { from { opacity: 0; transform: translate(-50%, 16px); } }
 
