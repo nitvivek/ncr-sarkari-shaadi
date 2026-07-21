@@ -69,13 +69,14 @@ Strategic plan with numbered items (C = content, D = design, F = functional, W =
 | Redesign | `58e3043`, `de70006`, `fba0df2`, `9342ce6` | "Royal Heritage Modern" visual system; success-stories carousel w/ 7 illustrative couple photos in `public/stories/`. |
 | Wave 1 | `5f72ee5` | Emotion-first landing rebuild + dropped arch shape. New sections: two-careers-one-life spine, same-city split-screen, free-messaging band, verification pipeline, women-in-govt, comparison table, why-it-matters lines, SEO meta. |
 | Wave 2 | `6baaae0`, `a1bf85c` | Client-side interactive tools: Financial Advantage Calculator, Compatibility Demo, Privacy Playground, Neighbourhood Compatibility, Marriage-Readiness Timeline, representative testimonial. |
+| F13 | `b95d170` | Interests API (send/accept/decline/withdraw) + `interests` table + `.all()` on Database type + this handover doc. |
 
 Everything above **landing/content** is DONE. The member app (discover/profile/inbox/settings/admin) still shows **hardcoded demo data** — making it real is the functional work below.
 
 ## 9. Functional roadmap — F13–F17 (IN PROGRESS)
 Building the real interaction layer, one at a time. Status tracked here:
 
-- [ ] **F13 — Interests** (send / accept / decline / withdraw). Schema `interests`, API `/api/interests`.
+- [x] **F13 — Interests** (send / accept / decline / withdraw). Schema `interests`, API `/api/interests`. DONE `b95d170` — API live & tested. UI wiring pending members-directory.
 - [ ] **F14 — Photo privacy** (on-request, per-viewer approval, revocable).
 - [ ] **F15 — Hidden-profile mode** (functional; hidden ⇒ not discoverable; owner still browses).
 - [ ] **F16 — Contact masking** (phone/email never rendered; mutual-consent "Share" exchange).
