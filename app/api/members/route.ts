@@ -77,9 +77,9 @@ export async function GET(request: Request) {
   const orient = resolveOrientation(viewer?.my_gender ?? null, viewer?.my_pref ?? null, override);
   if (!orient) return json({ members: [], count: 0, orientationRequired: true });
 
-  // Step 2: build the orientation + other-agreement predicates. Binds are
-  // applied in the order the `?` placeholders appear in the WHERE clause
-  // (left to right), regardless of which condition list they belong to.
+  // Step 2: build the orientation + other-agreement predicates. Binds must
+  // appear in binds[] in the EXACT order the `?` placeholders are read
+  // by SQLite — left to right, top to bottom in the WHERE clause.
   const targetClause = orient.targetGender === 'any'
     ? "1 = 1"
     : "p.gender = ?";
@@ -94,16 +94,20 @@ export async function GET(request: Request) {
     )
   `;
 
-  // WHERE placeholder order (must match binds order):
-  //   1) u.id != ?                       -> session.user_id
-  //   2) blocks(blocker_user = ?)         -> session.user_id
-  //   3) blocks(blocker_user = ?)         -> session.user_id
-  //   4) target (p.gender = ?, optional)  -> targetBind
-  //   5) otherAgrees first ?              -> orient.myGender
-  //   6) otherAgrees second ?             -> orient.myGender
-  const binds: unknown[] = [session.user_id, session.user_id, session.user_id];
-  if (targetBind) binds.push(targetBind);
-  binds.push(orient.myGender, orient.myGender);
+  // WHERE placeholder order (left-to-right top-to-bottom):
+  //   u.id != ?                                                       (1)
+  //   NOT IN (... blocker_user = ?)                                   (2)
+  //   NOT IN (... blocker_user = ?)                                   (3)
+  //   target clause: p.gender = ?                                     (4)
+  //   otherAgrees first ?                                             (5)
+  //   otherAgrees second ?                                            (6)
+  const binds: unknown[] = [
+    session.user_id,                                  // 1
+    session.user_id,                                  // 2
+    session.user_id,                                  // 3
+  ];
+  if (targetBind !== null) binds.push(targetBind);    // 4
+  binds.push(orient.myGender, orient.myGender);       // 5, 6
 
   const conditions = [
     'u.id != ?',
