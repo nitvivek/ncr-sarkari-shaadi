@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 import { ministryNames, organisationsForMinistry } from './serviceData';
 import { coreNcrHubs, ncrDistrictGroups, serviceCadres } from './ncrData';
-import { profileSections, profileCompletion, completionTier, backedKeys, type FieldDef } from './profileFields';
+import { profileSections, profileCompletion, completionTier, backedKeys, prefKeys, type FieldDef } from './profileFields';
 
 type View = 'home' | 'discover' | 'profile' | 'inbox' | 'settings' | 'admin';
 
@@ -105,6 +105,8 @@ type ProfileData = {
   residence_city: string | null;
   verified_at: number | null;
   family_notes?: string | null;
+  // Phase B: index signature covers the expanded field set.
+  [key: string]: unknown;
 };
 
 function initialsOf(name: string) {
@@ -692,7 +694,8 @@ function ProfileEditor({ profile, user, onProfileSaved }: { profile: ProfileData
   const [values, setValues] = useState<ProfileValues>({});
   const [open, setOpen] = useState<string>('basics');
   const [saved, setSaved] = useState('');
-  // hydrate from server-backed profile + localStorage draft
+  const [prefs, setPrefs] = useState<Record<string, unknown>>({});
+  // hydrate from server-backed profile + partner_preferences + localStorage draft
   useEffect(() => {
     let draft: ProfileValues = {};
     try { draft = JSON.parse(localStorage.getItem(DRAFT_KEY) || '{}'); } catch { draft = {}; }
@@ -700,20 +703,75 @@ function ProfileEditor({ profile, user, onProfileSaved }: { profile: ProfileData
     if (profile) for (const k of backedKeys) { const val = (profile as unknown as Record<string, unknown>)[k]; if (val != null) server[k] = String(val); }
     setValues({ ...draft, ...server });
   }, [profile]);
-  // Debounce server autosave for backed text/textarea fields (700ms). Non-backed fields
-  // (the Phase A draft) live only in localStorage — no server traffic.
+  // fetch partner_preferences once
+  useEffect(() => {
+    if (!user) return;
+    fetch('/api/preferences').then(async (r) => {
+      if (!r.ok) return;
+      const d = await r.json().catch(() => null) as { preferences?: Record<string, unknown> } | null;
+      if (d?.preferences) setPrefs(d.preferences);
+    }).catch(() => undefined);
+  }, [user]);
+  // One-time draft migration: flush non-server-backed draft values to their
+  // real endpoints. Runs after profile hydration. Clears the draft on success.
+  const migratedRef = useRef(false);
+  useEffect(() => {
+    if (!user || !profile || migratedRef.current) return;
+    let draft: ProfileValues = {};
+    try { draft = JSON.parse(localStorage.getItem(DRAFT_KEY) || '{}'); } catch { draft = {}; }
+    if (Object.keys(draft).length === 0) { migratedRef.current = true; return; }
+    const profileKeys = Object.keys(draft).filter((k) => backedKeys.includes(k));
+    const prefDraftKeys = Object.keys(draft).filter((k) => prefKeys.includes(k));
+    const tasks: Promise<unknown>[] = [];
+    // profile keys already auto-save on next edit, but flush now so the
+    // draft can be cleared.
+    for (const k of profileKeys) {
+      const v = draft[k];
+      if (typeof v === 'string' && v.trim()) tasks.push(fetch('/api/profile', { method: 'PUT', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ [k]: v }) }).catch(() => null));
+    }
+    if (prefDraftKeys.length) {
+      const body: Record<string, unknown> = {};
+      for (const k of prefDraftKeys) {
+        const v = draft[k];
+        if (Array.isArray(v) ? v.length > 0 : !!(v && String(v).trim())) body[k] = v;
+      }
+      if (Object.keys(body).length) tasks.push(fetch('/api/preferences', { method: 'PUT', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) }).catch(() => null));
+    }
+    if (tasks.length === 0) { migratedRef.current = true; try { localStorage.removeItem(DRAFT_KEY); } catch { /* ignore */ } return; }
+    Promise.all(tasks).then(async () => {
+      migratedRef.current = true;
+      try { localStorage.removeItem(DRAFT_KEY); } catch { /* ignore */ }
+      // re-pull profile + prefs to refresh in-memory state
+      const pr = await fetch('/api/profile').catch(() => null);
+      if (pr?.ok) { const d = await pr.json().catch(() => null) as { profile?: ProfileData } | null; if (d?.profile) onProfileSaved(d.profile); }
+      const pf = await fetch('/api/preferences').catch(() => null);
+      if (pf?.ok) { const d = await pf.json().catch(() => null) as { preferences?: Record<string, unknown> } | null; if (d?.preferences) setPrefs(d.preferences); }
+    });
+  }, [user, profile, onProfileSaved]);
+  // Debounce server autosave for backed fields (700ms).
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => () => { if (saveTimer.current) clearTimeout(saveTimer.current); }, []);
   const setField = (key: string, val: string | string[]) => {
     setValues((cur) => {
       const next = { ...cur, [key]: val };
-      try { localStorage.setItem(DRAFT_KEY, JSON.stringify(next)); } catch { /* ignore */ }
-      if (user && backedKeys.includes(key) && typeof val === 'string') {
-        if (saveTimer.current) clearTimeout(saveTimer.current);
-        saveTimer.current = setTimeout(() => {
-          fetch('/api/profile', { method: 'PUT', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ [key]: val }) })
-            .then(async (r) => { if (r.ok) { const d = await r.json().catch(() => null) as { profile?: ProfileData } | null; if (d?.profile) onProfileSaved(d.profile); setSaved('Saved'); window.setTimeout(() => setSaved(''), 1500); } else { setSaved('Could not save'); window.setTimeout(() => setSaved(''), 2500); } }).catch(() => { setSaved('Offline'); window.setTimeout(() => setSaved(''), 2500); });
-        }, 700);
+      // Skip draft writes after migration — server is the source of truth now.
+      if (!migratedRef.current) try { localStorage.setItem(DRAFT_KEY, JSON.stringify(next)); } catch { /* ignore */ }
+      if (user && typeof val === 'string') {
+        const endpoint = backedKeys.includes(key) ? '/api/profile' : prefKeys.includes(key) ? '/api/preferences' : null;
+        if (endpoint) {
+          if (saveTimer.current) clearTimeout(saveTimer.current);
+          saveTimer.current = setTimeout(() => {
+            const body = backedKeys.includes(key) ? { [key]: val } : { [key]: val };
+            fetch(endpoint, { method: 'PUT', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) })
+              .then(async (r) => {
+                if (r.ok) {
+                  if (endpoint === '/api/profile') { const d = await r.json().catch(() => null) as { profile?: ProfileData } | null; if (d?.profile) onProfileSaved(d.profile); }
+                  else { const d = await r.json().catch(() => null) as { preferences?: Record<string, unknown> } | null; if (d?.preferences) setPrefs(d.preferences); }
+                  setSaved('Saved'); window.setTimeout(() => setSaved(''), 1500);
+                } else { setSaved('Could not save'); window.setTimeout(() => setSaved(''), 2500); }
+              }).catch(() => { setSaved('Offline'); window.setTimeout(() => setSaved(''), 2500); });
+          }, 700);
+        }
       }
       return next;
     });
@@ -722,11 +780,24 @@ function ProfileEditor({ profile, user, onProfileSaved }: { profile: ProfileData
   const tier = completionTier(pct);
   const lockedSet = (key: string) => !!(profile as unknown as Record<string, unknown> | null)?.[key];
   const sectionDone = (fields: FieldDef[]) => fields.filter((f) => !f.optional).every((f) => { const x = values[f.key]; return Array.isArray(x) ? x.length > 0 : !!(x && String(x).trim()); });
+  // Merge server-side partner_preferences into the values the editor renders.
+  // JSON-array pref fields (marital_status/education/diet) are decoded here.
+  const merged: ProfileValues = { ...values };
+  for (const k of prefKeys) {
+    const raw = prefs[k];
+    if (raw == null) continue;
+    try { if (Array.isArray(raw)) { merged[k] = raw as string[]; continue; } } catch { /* ignore */ }
+    const s = String(raw);
+    if (s.startsWith('[')) {
+      try { const parsed = JSON.parse(s); if (Array.isArray(parsed)) { merged[k] = parsed as string[]; continue; } } catch { /* ignore */ }
+    }
+    merged[k] = s;
+  }
   return <div className="profile-editor">
-    <div className="pe-meter"><div className="pe-meter-top"><div><strong>Profile strength</strong><span className={`pe-tier ${tier.cls}`}>{tier.label}</span></div><strong className="pe-pct">{pct}%</strong></div><div className="progress-track"><span style={{ width: `${pct}%` }} /></div><p className="pe-hint">A fuller profile gets far better responses. New fields are saved as a private draft on this device — full saving switches on after the backend update.{saved && <em> · {saved}</em>}</p></div>
+    <div className="pe-meter"><div className="pe-meter-top"><div><strong>Profile strength</strong><span className={`pe-tier ${tier.cls}`}>{tier.label}</span></div><strong className="pe-pct">{pct}%</strong></div><div className="progress-track"><span style={{ width: `${pct}%` }} /></div><p className="pe-hint">A fuller profile gets far better responses. All fields save securely to your profile.{saved && <em> · {saved}</em>}</p></div>
     {profileSections.map((s) => { const isOpen = open === s.id; const done = sectionDone(s.fields); return <div className={`pe-section ${isOpen ? 'pe-section--open' : ''}`} key={s.id}>
       <button type="button" className="pe-head" onClick={() => setOpen(isOpen ? '' : s.id)}><span className="pe-head-icon"><Icon name={s.icon as IconName} size={17} /></span><span className="pe-head-text"><strong>{s.title}</strong><small>{s.desc}</small></span><span className={`pe-head-state ${done ? 'pe-head-state--done' : ''}`}>{done ? <><Icon name="check" size={13} /> Done</> : 'Add'}</span><Icon name="chevron" size={16} /></button>
-      {isOpen && <div className="pe-body">{s.fields.map((f) => <ProfileField key={f.key} field={f} value={values[f.key]} locked={!!f.lock && lockedSet(f.key)} onChange={(val) => setField(f.key, val)} />)}</div>}
+      {isOpen && <div className="pe-body">{s.fields.map((f) => <ProfileField key={f.key} field={f} value={merged[f.key]} locked={!!f.lock && lockedSet(f.key)} onChange={(val) => setField(f.key, val)} />)}</div>}
     </div>; })}
   </div>;
 }

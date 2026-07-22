@@ -147,3 +147,11 @@ export function profileCompletion(values: Record<string, unknown>): number {
 
 // keys that already persist to /api/profile today
 export const backedKeys = profileSections.flatMap((s) => s.fields.filter((f) => f.backed).map((f) => f.key));
+
+// pref_* keys persist to /api/preferences instead.
+export const prefKeys = profileSections.find((s) => s.id === 'preferences')!.fields.map((f) => f.key);
+
+// Phase A → Phase B: every remaining Phase A field is now persisted via
+// /api/profile (Phase B schema accepts them). Everything except pref_*.
+export const allKeys = profileSections.flatMap((s) => s.fields.map((f) => f.key));
+export const migratedKeys = allKeys.filter((k) => !prefKeys.includes(k));

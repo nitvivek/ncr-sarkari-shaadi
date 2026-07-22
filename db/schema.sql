@@ -34,6 +34,49 @@ CREATE TABLE IF NOT EXISTS profiles (
   photo_mode TEXT NOT NULL DEFAULT 'on_request', -- on_request | verified | hidden
   photo_key TEXT, -- F19: R2 object key of the profile photo (null = none)
   verified_at INTEGER,
+  -- Phase B: expanded matrimony profile fields (2026-07-22)
+  dob TEXT,                       -- ISO date; immutable once set
+  marital_status TEXT,
+  height TEXT,
+  mother_tongue TEXT,
+  diet TEXT,
+  drink TEXT,
+  smoke TEXT,
+  hobbies TEXT,                   -- JSON array (string list)
+  body_type TEXT,
+  complexion TEXT,
+  physical_status TEXT,           -- Normal | Differently-abled
+  blood_group TEXT,
+  religion TEXT,                  -- immutable once set
+  caste TEXT,
+  sub_caste TEXT,
+  gothra TEXT,
+  manglik TEXT,
+  highest_education TEXT,
+  college TEXT,
+  field_of_study TEXT,
+  designation TEXT,
+  annual_income TEXT,
+  hometown TEXT,
+  relocate TEXT,
+  father_status TEXT,
+  father_occupation TEXT,
+  mother_status TEXT,
+  mother_occupation TEXT,
+  brothers TEXT,
+  brothers_married TEXT,
+  sisters TEXT,
+  sisters_married TEXT,
+  family_type TEXT,
+  family_values TEXT,
+  family_status TEXT,
+  about_family TEXT,
+  time_of_birth TEXT,
+  place_of_birth TEXT,
+  rashi TEXT,
+  nakshatra TEXT,
+  kundli_matching TEXT,
+  horoscope_image_key TEXT,       -- R2 key for kundli image
   created_at INTEGER NOT NULL,
   updated_at INTEGER NOT NULL
 );
@@ -133,3 +176,28 @@ CREATE TABLE IF NOT EXISTS messages (
 );
 CREATE INDEX IF NOT EXISTS messages_from_idx ON messages(from_user, to_user, created_at);
 CREATE INDEX IF NOT EXISTS messages_to_idx ON messages(to_user, read_at);
+
+-- Phase B: partner preferences. One row per user; fields JSON-encoded for
+-- flexibility (age range string, height range string, multi-select lists).
+CREATE TABLE IF NOT EXISTS partner_preferences (
+  user_id TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+  age_range TEXT,
+  height_range TEXT,
+  marital_status TEXT,    -- JSON array
+  religion TEXT,
+  education TEXT,         -- JSON array
+  diet TEXT,              -- JSON array
+  notes TEXT,
+  updated_at INTEGER NOT NULL
+);
+
+-- Phase B: multi-photo gallery. Primary photo stays on profiles.photo_key;
+-- additional photos live here. Ordered by `position`.
+CREATE TABLE IF NOT EXISTS profile_photos (
+  id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  r2_key TEXT NOT NULL,
+  position INTEGER NOT NULL DEFAULT 0,
+  created_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS profile_photos_user_idx ON profile_photos(user_id, position);
