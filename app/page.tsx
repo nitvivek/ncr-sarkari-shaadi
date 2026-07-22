@@ -1147,6 +1147,29 @@ function AppShell({ user, onLogout }: { user: AuthUser | null; onLogout: () => v
   const isReal = !!user;
   const showToast = (msg: string) => { setToast(msg); window.setTimeout(() => setToast(''), 3200); };
 
+  // Hard reset per-account state when the user changes (login / re-login).
+  // Without this, the new account inherits the previous account's members
+  // list, profile, prefs, etc. — visible especially on Discover/Home where
+  // stale cards flicker in before the new fetch resolves.
+  useEffect(() => {
+    setMembers([]);
+    setProfile(null);
+    setPrefs({});
+    setSentInterests([]);
+    setReceivedInterests([]);
+    setPhotoRequests([]);
+    setReports([]);
+    setSelected(null);
+    setProfileOpen(false);
+    setChatWith(null);
+    setMyHasPhoto(false);
+    setMyVerified(false);
+    setUnread(0);
+    setDraft({});
+    setView('home');
+    defaultedPillRef.current = false;
+  }, [user]);
+
   useEffect(() => {
     if (!user) return;
     fetch('/api/profile').then(async (response) => {
