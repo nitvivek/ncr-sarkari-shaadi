@@ -18,6 +18,13 @@ const textFields = ['pref_age', 'pref_height', 'pref_religion', 'pref_notes', 'p
 const jsonFields = ['pref_marital', 'pref_education', 'pref_diet'] as const;
 const LOOKING_FOR_OPTIONS = ['Female', 'Male', 'Any / All Genders'];
 
+// pref_looking_for is set-once like profiles.gender/dob/height. Once chosen,
+// it can only be changed by an admin (or by deleting + re-creating the
+// account). This is so the orientation contract a member makes with the
+// community — "I'm here to be matched with X" — can't be silently flipped
+// to mask past behaviour.
+const immutablePrefs = new Set(['pref_looking_for']);
+
 export async function GET(request: Request) {
   const session = await getSession(request);
   if (!session) return json({ error: 'Not signed in.' }, { status: 401 });
@@ -31,6 +38,7 @@ export async function PUT(request: Request) {
   if (!session) return json({ error: 'Not signed in.' }, { status: 401 });
   const body = await request.json().catch(() => null) as Record<string, unknown> | null;
   if (!body) return json({ error: 'Invalid request body.' }, { status: 400 });
+  const existing = await db().prepare('SELECT pref_looking_for FROM partner_preferences WHERE user_id = ?').bind(session.user_id).first<{ pref_looking_for: string | null }>();
   const updates: string[] = [];
   const values: unknown[] = [];
   for (const field of textFields) {
@@ -40,6 +48,9 @@ export async function PUT(request: Request) {
     if (typeof value === 'string' && value.length > MAX) return json({ error: `Value for ${field} is too long.` }, { status: 400 });
     if (field === 'pref_looking_for' && typeof value === 'string' && value !== '' && !LOOKING_FOR_OPTIONS.includes(value)) {
       return json({ error: `Invalid value for pref_looking_for.` }, { status: 400 });
+    }
+    if (immutablePrefs.has(field) && existing?.pref_looking_for && value !== null && value !== existing.pref_looking_for) {
+      return json({ error: 'pref_looking_for is set once and cannot be changed. Contact support if it is wrong.' }, { status: 409 });
     }
     updates.push(`${field} = ?`);
     values.push(value === '' ? null : value);
