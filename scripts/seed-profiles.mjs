@@ -350,9 +350,10 @@ async function seedUser(user, photoPath, placeholderPath, adminJar) {
   console.log(`   ↳ profile filled (38 fields)`);
 
   await putPreferences(j, {
-    age_range: user.pref_age, height_range: user.pref_height,
-    marital_status: user.pref_marital, religion: user.pref_religion,
-    education: user.pref_education, diet: user.pref_diet, notes: user.pref_notes,
+    pref_age: user.pref_age, pref_height: user.pref_height,
+    pref_marital: user.pref_marital, pref_religion: user.pref_religion,
+    pref_education: user.pref_education, pref_diet: user.pref_diet, pref_notes: user.pref_notes,
+    pref_looking_for: user.gender === 'male' ? 'Female' : user.gender === 'female' ? 'Male' : 'Any / All Genders',
   });
   console.log(`   ↳ preferences saved`);
 

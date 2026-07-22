@@ -34,6 +34,9 @@ CREATE TABLE IF NOT EXISTS profiles (
   photo_mode TEXT NOT NULL DEFAULT 'on_request', -- on_request | verified | hidden
   photo_key TEXT, -- F19: R2 object key of the profile photo (null = none)
   verified_at INTEGER,
+  photo_x REAL NOT NULL DEFAULT 0.5,  -- 0016: crop focus (object-position x, 0-1)
+  photo_y REAL NOT NULL DEFAULT 0.3,  -- 0016: crop focus (object-position y, 0-1)
+  photo_zoom REAL NOT NULL DEFAULT 1.0, -- 0016: crop scale (1.0 = fit, max 2.0)
   -- Phase B: expanded matrimony profile fields (2026-07-22)
   dob TEXT,                       -- ISO date; immutable once set
   marital_status TEXT,
@@ -181,13 +184,14 @@ CREATE INDEX IF NOT EXISTS messages_to_idx ON messages(to_user, read_at);
 -- flexibility (age range string, height range string, multi-select lists).
 CREATE TABLE IF NOT EXISTS partner_preferences (
   user_id TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
-  age_range TEXT,
-  height_range TEXT,
-  marital_status TEXT,    -- JSON array
-  religion TEXT,
-  education TEXT,         -- JSON array
-  diet TEXT,              -- JSON array
-  notes TEXT,
+  pref_age TEXT,
+  pref_height TEXT,
+  pref_marital TEXT,      -- JSON array (0017)
+  pref_religion TEXT,
+  pref_education TEXT,    -- JSON array
+  pref_diet TEXT,         -- JSON array
+  pref_notes TEXT,
+  pref_looking_for TEXT NOT NULL DEFAULT 'Any / All Genders',  -- 0016/0017
   updated_at INTEGER NOT NULL
 );
 

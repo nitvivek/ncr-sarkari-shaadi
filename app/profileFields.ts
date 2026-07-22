@@ -115,6 +115,7 @@ export const profileSections: SectionDef[] = [
     { key: 'kundli_matching', label: 'Open to kundli matching', type: 'radio', options: ['Yes', 'No', 'Optional'], optional: true },
   ] },
   { id: 'preferences', title: 'Partner preferences', icon: 'search', desc: 'What you’re looking for — powers your recommendations.', fields: [
+    { key: 'pref_looking_for', label: 'Looking for', type: 'radio', options: ['Female', 'Male', 'Any / All Genders'], hint: 'Who you’d like to be matched with.' },
     { key: 'pref_age', label: 'Preferred age range', type: 'text', placeholder: 'e.g. 28–34' },
     { key: 'pref_height', label: 'Preferred height range', type: 'text', optional: true, placeholder: 'e.g. 5\'2" – 5\'8"' },
     { key: 'pref_marital', label: 'Marital status', type: 'multiselect', options: maritalStatus },

@@ -1201,12 +1201,24 @@ textarea.pf-input { min-height: 84px; line-height: 1.6; resize: vertical; }
 .pf-locked em { display: block; font-style: normal; font-size: 11px; color: var(--ink-muted); margin-top: 3px; }
 @media (max-width: 640px) { .pe-body { grid-template-columns: 1fr; } }
 
-/* F19 — real photos + verification upload */
-.member-photo { width: 100%; height: 100%; min-height: 138px; object-fit: cover; object-position: 50% 30%; display: block; }
-.member-photo--modal { width: 84px; height: 84px; min-height: 0; border-radius: 50%; border: 2px solid rgba(201, 159, 63, 0.5); flex: none; }
-.profile-photo-preview { width: 116px; height: 116px; border-radius: 50%; object-fit: cover; object-position: 50% 30%; border: 2px solid rgba(201, 159, 63, 0.5); display: block; margin: 18px 0 4px; }
+/* F19 — real photos + verification upload. Each photo lives inside a wrapper
+   that clips; the inner <img> can be panned (object-position) and scaled
+   (transform: scale) per the owner's photo_x / photo_y / photo_zoom. */
+.member-photo-wrap { position: relative; width: 100%; height: 100%; min-height: 138px; overflow: hidden; background: var(--paper-warm); }
+.member-photo-wrap--modal { width: 84px; height: 84px; min-height: 0; border-radius: 50%; border: 2px solid rgba(201, 159, 63, 0.5); flex: none; }
+.member-photo-wrap--profile { width: 116px; height: 116px; border-radius: 50%; border: 2px solid rgba(201, 159, 63, 0.5); margin: 18px 0 4px; }
+.member-photo { width: 100%; height: 100%; display: block; transition: transform 0.35s var(--ease-out); transform-origin: 50% 50%; }
+.member-photo--legacy-look { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; display: block; }
 .profile-photo-empty { width: 116px; height: 116px; border-radius: 50%; border: 1px dashed var(--line-strong); background: var(--paper-warm); color: var(--ink-muted); display: grid; place-items: center; align-content: center; gap: 6px; margin: 18px 0 4px; text-align: center; }
 .profile-photo-empty small { font-size: 10.5px; }
+/* cropper overlay (only when editing) */
+.photo-cropper { position: relative; width: 100%; aspect-ratio: 1 / 1; max-width: 320px; margin: 6px 0 12px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(201, 159, 63, 0.6); background: var(--paper-warm); cursor: grab; user-select: none; }
+.photo-cropper:active { cursor: grabbing; }
+.photo-cropper img { width: 100%; height: 100%; display: block; transform-origin: 50% 50%; pointer-events: none; }
+.photo-cropper-controls { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.photo-cropper-controls .label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gold-deep); }
+.photo-cropper-controls input[type="range"] { flex: 1; accent-color: var(--maroon); }
+.photo-cropper-actions { display: flex; gap: 8px; margin-top: 8px; }
 .photo-actions { display: flex; gap: 8px; margin-top: 12px; }
 .photo-upload-label { position: relative; overflow: hidden; cursor: pointer; }
 .photo-upload-label input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }

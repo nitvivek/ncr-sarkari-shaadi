@@ -75,11 +75,16 @@ const editableFields = [
   'brothers', 'brothers_married', 'sisters', 'sisters_married',
   'family_type', 'family_values', 'family_status', 'about_family',
   'time_of_birth', 'place_of_birth', 'rashi', 'nakshatra', 'kundli_matching',
+  // 0016: per-profile photo crop transform
+  'photo_x', 'photo_y', 'photo_zoom',
 ] as const;
 
 // Fields stored as JSON-encoded arrays in TEXT columns. Accept either a
 // JSON-string from older clients or a real array; persist as JSON.
 const arrayFields = new Set(['hobbies']);
+
+// 0016: numeric crop transform fields. Accept numbers or numeric strings.
+const numericFields = new Set(['photo_x', 'photo_y', 'photo_zoom']);
 
 const immutables = new Set(['gender', 'dob', 'height', 'mother_tongue', 'religion']);
 
@@ -101,8 +106,15 @@ export async function PUT(request: Request) {
   for (const field of editableFields) {
     if (!(field in body)) continue;
     const raw = body[field];
-    let value: string | null;
-    if (arrayFields.has(field)) {
+    let value: string | number | null;
+    if (numericFields.has(field)) {
+      if (raw === null || raw === '') value = null;
+      else {
+        const n = typeof raw === 'number' ? raw : Number(raw);
+        if (!Number.isFinite(n)) return json({ error: `Invalid value for ${field}.` }, { status: 400 });
+        value = n;
+      }
+    } else if (arrayFields.has(field)) {
       if (raw === null) value = null;
       else if (Array.isArray(raw)) {
         const filtered = (raw as unknown[]).filter((v): v is string => typeof v === 'string').slice(0, 100);

@@ -17,6 +17,9 @@ type MemberRow = {
   photo_mode: string;
   photo_key: string | null;
   created_for: string | null;
+  photo_x: number | null;
+  photo_y: number | null;
+  photo_zoom: number | null;
 };
 
 function maskName(name: string) {
@@ -44,7 +47,7 @@ export async function GET(request: Request) {
   }
   const rows = await db()
     .prepare(
-      `SELECT u.id AS user_id, u.full_name, p.service, p.residence_city, p.gender, p.posting_outlook, p.verified_at, p.photo_mode, p.photo_key, p.created_for
+      `SELECT u.id AS user_id, u.full_name, p.service, p.residence_city, p.gender, p.posting_outlook, p.verified_at, p.photo_mode, p.photo_key, p.created_for, p.photo_x, p.photo_y, p.photo_zoom
        FROM users u JOIN profiles p ON p.user_id = u.id
        WHERE ${conditions.join(' AND ')}
        ORDER BY u.created_at DESC LIMIT 60`
@@ -62,6 +65,9 @@ export async function GET(request: Request) {
     photoMode: m.photo_mode,
     hasPhoto: !!m.photo_key,
     managedByFamily: !!m.created_for && m.created_for !== 'Myself',
+    photoX: m.photo_x ?? 0.5,
+    photoY: m.photo_y ?? 0.3,
+    photoZoom: m.photo_zoom ?? 1.0,
   }));
   return json({ members, count: members.length });
 }

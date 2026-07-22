@@ -2,25 +2,27 @@ import { db, getSession, json } from '../_lib/auth';
 
 type PrefsRow = {
   user_id: string;
-  age_range: string | null;
-  height_range: string | null;
-  marital_status: string | null;  // JSON array string
-  religion: string | null;
-  education: string | null;        // JSON array string
-  diet: string | null;             // JSON array string
-  notes: string | null;
+  pref_age: string | null;
+  pref_height: string | null;
+  pref_marital: string | null;   // JSON array string
+  pref_religion: string | null;
+  pref_education: string | null;  // JSON array string
+  pref_diet: string | null;       // JSON array string
+  pref_notes: string | null;
+  pref_looking_for: string | null;
   updated_at: number;
 };
 
 const MAX = 2000;
-const textFields = ['age_range', 'height_range', 'religion', 'notes'] as const;
-const jsonFields = ['marital_status', 'education', 'diet'] as const;
+const textFields = ['pref_age', 'pref_height', 'pref_religion', 'pref_notes', 'pref_looking_for'] as const;
+const jsonFields = ['pref_marital', 'pref_education', 'pref_diet'] as const;
+const LOOKING_FOR_OPTIONS = ['Female', 'Male', 'Any / All Genders'];
 
 export async function GET(request: Request) {
   const session = await getSession(request);
   if (!session) return json({ error: 'Not signed in.' }, { status: 401 });
   const row = await db().prepare('SELECT * FROM partner_preferences WHERE user_id = ?').bind(session.user_id).first<PrefsRow>();
-  if (!row) return json({ preferences: { user_id: session.user_id } });
+  if (!row) return json({ preferences: { user_id: session.user_id, pref_looking_for: 'Any / All Genders' } });
   return json({ preferences: row });
 }
 
@@ -36,6 +38,9 @@ export async function PUT(request: Request) {
     const value = body[field];
     if (value !== null && typeof value !== 'string') return json({ error: `Invalid value for ${field}.` }, { status: 400 });
     if (typeof value === 'string' && value.length > MAX) return json({ error: `Value for ${field} is too long.` }, { status: 400 });
+    if (field === 'pref_looking_for' && typeof value === 'string' && value !== '' && !LOOKING_FOR_OPTIONS.includes(value)) {
+      return json({ error: `Invalid value for pref_looking_for.` }, { status: 400 });
+    }
     updates.push(`${field} = ?`);
     values.push(value === '' ? null : value);
   }
