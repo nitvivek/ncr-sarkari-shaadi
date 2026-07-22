@@ -4,3 +4,5 @@ dist/
 .wrangler/
 work/
 tsconfig.tsbuildinfo
+public/test-photos/
+cookies.txt

@@ -77,6 +77,10 @@ const editableFields = [
   'time_of_birth', 'place_of_birth', 'rashi', 'nakshatra', 'kundli_matching',
 ] as const;
 
+// Fields stored as JSON-encoded arrays in TEXT columns. Accept either a
+// JSON-string from older clients or a real array; persist as JSON.
+const arrayFields = new Set(['hobbies']);
+
 const immutables = new Set(['gender', 'dob', 'height', 'mother_tongue', 'religion']);
 
 export async function GET(request: Request) {
@@ -96,9 +100,23 @@ export async function PUT(request: Request) {
   const values: unknown[] = [];
   for (const field of editableFields) {
     if (!(field in body)) continue;
-    const value = body[field];
-    if (value !== null && typeof value !== 'string') return json({ error: `Invalid value for ${field}.` }, { status: 400 });
-    if (typeof value === 'string' && value.length > 2000) return json({ error: `Value for ${field} is too long.` }, { status: 400 });
+    const raw = body[field];
+    let value: string | null;
+    if (arrayFields.has(field)) {
+      if (raw === null) value = null;
+      else if (Array.isArray(raw)) {
+        const filtered = (raw as unknown[]).filter((v): v is string => typeof v === 'string').slice(0, 100);
+        const enc = JSON.stringify(filtered);
+        if (enc.length > 2000) return json({ error: `Value for ${field} is too long.` }, { status: 400 });
+        value = enc;
+      } else if (typeof raw === 'string') {
+        value = raw.length > 2000 ? null : raw;
+      } else return json({ error: `Invalid value for ${field}.` }, { status: 400 });
+    } else {
+      if (raw !== null && typeof raw !== 'string') return json({ error: `Invalid value for ${field}.` }, { status: 400 });
+      if (typeof raw === 'string' && raw.length > 2000) return json({ error: `Value for ${field} is too long.` }, { status: 400 });
+      value = raw as string | null;
+    }
     if (immutables.has(field) && existing?.[field] && existing[field] !== value) {
       return json({ error: `${field} is set once and cannot be changed.` }, { status: 409 });
     }
