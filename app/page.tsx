@@ -579,6 +579,18 @@ function MarriageTimeline() {
   </section>;
 }
 
+function CommunityStats() {
+  const [s, setS] = useState<{ total: number; male: number; female: number; verified: number } | null>(null);
+  useEffect(() => { fetch('/api/stats').then((r) => r.json()).then(setS).catch(() => undefined); }, []);
+  if (!s || s.total < 10) return null; // honest: appears only once the numbers are real
+  return <section className="shell community-stats reveal" aria-label="Community at a glance">
+    <div className="cstat"><strong><CountUp value={String(s.total)} /></strong><span>members in Delhi NCR</span></div>
+    <div className="cstat"><strong><CountUp value={String(s.verified)} /></strong><span>verified profiles</span></div>
+    <div className="cstat"><strong><CountUp value={String(s.female)} /></strong><span>women</span></div>
+    <div className="cstat"><strong><CountUp value={String(s.male)} /></strong><span>men</span></div>
+  </section>;
+}
+
 function Landing({ onAuth, onOnboard, onDemo }: { onAuth: () => void; onOnboard: () => void; onDemo: () => void }) {
   useEffect(() => {
     document.documentElement.classList.add('js');
@@ -613,9 +625,10 @@ function Landing({ onAuth, onOnboard, onDemo }: { onAuth: () => void; onOnboard:
     <GotaDivider />
     <StoriesSection />
     <MarriageTimeline />
+    <CommunityStats />
     <GotaDivider />
     <section className="cta-band"><div className="shell cta-inner"><div><div className="eyebrow eyebrow--light">For a life that fits</div><h2>Your next chapter can share the same map.</h2></div><button className="button button--light button--large" onClick={onOnboard}>Join NCRSarkariShaadi free <Icon name="arrow" size={17} /></button></div></section>
-    <footer className="landing-footer shell"><Logo /><div className="footer-note">Independent platform for NCR government professionals · Not affiliated with any government department</div><div className="footer-links"><a href="/verification">Verification</a><a href="/privacy">Privacy</a><a href="/safety">Safety</a><a href="/faq">FAQ</a></div></footer>
+    <footer className="landing-footer shell"><Logo /><div className="footer-note">Independent platform for NCR government professionals · Not affiliated with any government department</div><div className="footer-links"><a href="/verification">Verification</a><a href="/privacy">Privacy</a><a href="/safety">Safety</a><a href="/insights">Insights</a><a href="/faq">FAQ</a></div></footer>
   </main>;
 }
 

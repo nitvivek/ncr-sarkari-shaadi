@@ -13,6 +13,8 @@ const paths: Record<string, ReactNode> = {
   clock: <><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></>,
   spark: <path d="m12 3 1.4 5.6L19 10l-5.6 1.4L12 17l-1.4-5.6L5 10l5.6-1.4L12 3Z" />,
   eye: <><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" /><circle cx="12" cy="12" r="3" /></>,
+  home: <><path d="m3 11 9-8 9 8" /><path d="M5 10v10h14V10" /></>,
+  arrow: <><path d="M5 12h13" /><path d="m13 6 6 6-6 6" /></>,
 };
 
 export function DocIcon({ name, size = 16 }: { name: string; size?: number }) {
@@ -30,6 +32,6 @@ export function DocPage({ eyebrow, title, lede, children }: { eyebrow: string; t
       <div className="doc-head"><div className="eyebrow">{eyebrow}</div><h1 className="doc-title">{title}</h1><p className="doc-lede">{lede}</p></div>
       {children}
     </article>
-    <footer className="landing-footer shell"><Brand /><div className="footer-note">Independent platform for NCR government professionals · Not affiliated with any government department</div><div className="footer-links"><a href="/verification">Verification</a><a href="/privacy">Privacy</a><a href="/safety">Safety</a><a href="/faq">FAQ</a></div></footer>
+    <footer className="landing-footer shell"><Brand /><div className="footer-note">Independent platform for NCR government professionals · Not affiliated with any government department</div><div className="footer-links"><a href="/verification">Verification</a><a href="/privacy">Privacy</a><a href="/safety">Safety</a><a href="/insights">Insights</a><a href="/faq">FAQ</a></div></footer>
   </main>;
 }
