@@ -647,6 +647,7 @@ html.js .reveal[data-reveal-delay='3'] { transition-delay: 0.3s; }
 .match-name-row h3 { font-weight: 540; font-size: 23px; letter-spacing: -0.035em; margin: 0; color: var(--maroon-ink); }
 .verified { display: inline-flex; align-items: center; gap: 5px; color: var(--green); font-size: 9.5px; font-weight: 700; white-space: nowrap; }
 .verified-dot { display: grid; place-items: center; border-radius: 50%; width: 16px; height: 16px; background: var(--green-soft); border: 1px solid rgba(47, 87, 68, 0.25); }
+.family-chip { display: inline-flex; align-items: center; gap: 4px; margin: 6px 0 0; font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gold-deep); background: var(--paper-warm); border: 1px solid rgba(201, 159, 63, 0.35); padding: 3px 8px; border-radius: 20px; }
 .match-role, .match-city { font-size: 12px; color: var(--ink-muted); margin: 6px 0; }
 .match-city { display: flex; align-items: center; gap: 5px; }
 .city-pin { display: inline-flex; color: var(--gold-deep); }

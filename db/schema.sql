@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS profiles (
   posting_outlook TEXT,
   preferred_hubs TEXT,
   about TEXT,
+  family_notes TEXT, -- F30: private notes for family-managed profiles (owner-only)
   residence_city TEXT,
   residence_district TEXT,
   posting_city TEXT,
