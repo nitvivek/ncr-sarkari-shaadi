@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin-ingest
+
+Sitemap: https://v2.ncrsarkarishaadi.workers.dev/sitemap.xml
