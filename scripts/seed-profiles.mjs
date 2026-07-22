@@ -304,7 +304,7 @@ async function adminApprove(adminJar, userId) {
 
 // ---- Seed driver ----
 
-async function seedUser(user, photoPath, placeholderPath, adminJar) {
+async function seedUser(user, photoPath, placeholderPath, adminJar, opts = {}) {
   const j = jar();
   const tag = `${user.login} (${user.name})`;
   process.stdout.write(`\n• ${tag}\n`);
@@ -349,13 +349,36 @@ async function seedUser(user, photoPath, placeholderPath, adminJar) {
   });
   console.log(`   ↳ profile filled (38 fields)`);
 
-  await putPreferences(j, {
-    pref_age: user.pref_age, pref_height: user.pref_height,
-    pref_marital: user.pref_marital, pref_religion: user.pref_religion,
-    pref_education: user.pref_education, pref_diet: user.pref_diet, pref_notes: user.pref_notes,
-    pref_looking_for: user.gender === 'male' ? 'Female' : user.gender === 'female' ? 'Male' : 'Any / All Genders',
-  });
-  console.log(`   ↳ preferences saved`);
+  // LGB-mix scenario: Aarav (male) → looks for Male, Priya (female) →
+  // looks for Female. The rest stick to the conventional default. This
+  // gives the orientation-aware discovery all four paths to test.
+  const lgbOverride = {
+    'aarav.m@ncr-tests.in': 'Male',
+    'priya.s@ncr-tests.in': 'Female',
+  };
+  const prefLookingFor = lgbOverride[user.login] ?? (user.gender === 'male' ? 'Female' : user.gender === 'female' ? 'Male' : 'Any / All Genders');
+  const forcePrefLine = opts.forcePrefs && lgbOverride[user.login] ? ' (forced)' : '';
+
+  // Always PUT preferences (the route is idempotent — it overwrites).
+  // The forcePrefs flag guarantees this runs even if anything in the
+  // earlier profile PUT short-circuited.
+  if (opts.forcePrefs) {
+    await putPreferences(j, {
+      pref_age: user.pref_age, pref_height: user.pref_height,
+      pref_marital: user.pref_marital, pref_religion: user.pref_religion,
+      pref_education: user.pref_education, pref_diet: user.pref_diet, pref_notes: user.pref_notes,
+      pref_looking_for: prefLookingFor,
+    });
+    console.log(`   ↳ preferences saved (force — pref_looking_for=${prefLookingFor}${forcePrefLine})`);
+  } else {
+    await putPreferences(j, {
+      pref_age: user.pref_age, pref_height: user.pref_height,
+      pref_marital: user.pref_marital, pref_religion: user.pref_religion,
+      pref_education: user.pref_education, pref_diet: user.pref_diet, pref_notes: user.pref_notes,
+      pref_looking_for: prefLookingFor,
+    });
+    console.log(`   ↳ preferences saved`);
+  }
 
   if (existsSync(photoPath)) {
     await uploadPhoto(j, photoPath, '/api/photo');
@@ -413,8 +436,20 @@ async function main() {
     console.log(`SEED_ADMIN_PASSWORD not set → verifications will be left 'pending' (admin must approve manually)`);
   }
 
+  // CLI flags
+  //   --force-prefs   always PUT partner_preferences (incl. pref_looking_for)
+  //                   using the LGB-mix scenario, even for existing users.
+  //                   Useful when you edit pref_looking_for in the editor
+  //                   and want to reset all 6 accounts to a chosen scheme
+  //                   for testing.
+  const args = new Set(process.argv.slice(2));
+  const FORCE_PREFS = args.has('--force-prefs');
+  if (FORCE_PREFS) {
+    console.log(`--force-prefs: LGB mix — Aarav/Male, Priya/Female, others conventional`);
+  }
+
   for (const u of USERS) {
-    await seedUser(u, join(PHOTOS_DIR, `${u.n}.png`), placeholder, adminJar);
+    await seedUser(u, join(PHOTOS_DIR, `${u.n}.png`), placeholder, adminJar, { forcePrefs: FORCE_PREFS });
   }
 
   console.log(`\n✓ seeded ${USERS.length} profiles\n`);
