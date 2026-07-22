@@ -702,7 +702,7 @@ function Topbar({ view, onLogout, firstName, initials }: { view: View; onLogout:
   const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
   const title = view === 'home' ? `${greeting}, ${firstName}` : view === 'discover' ? 'Discover your aligned circle' : view === 'profile' ? 'My profile' : view === 'inbox' ? 'Your conversations' : view === 'settings' ? 'Privacy & safety' : 'Admin review';
   const sub = view === 'home' ? 'A few thoughtful matches are waiting for you.' : view === 'discover' ? 'Search by the life you want to build in NCR.' : view === 'profile' ? 'The more context you share, the more useful your matches become.' : view === 'inbox' ? 'A quiet space to take the next step.' : view === 'settings' ? 'You are in control of every detail.' : 'Keep the community trusted and useful.';
-  return <header className="app-topbar"><div><div className="app-title">{title}</div><p>{sub}</p></div><div className="topbar-actions"><button className="icon-button notification-button" aria-label="Notifications"><Icon name="bell" size={19} /><i /></button><button className="topbar-avatar" onClick={onLogout}><Avatar initials={initials} tone="navy" /><Icon name="chevron" size={14} /></button></div></header>;
+  return <header className="app-topbar"><div><div className="app-title">{title}</div><p>{sub}</p></div><div className="topbar-actions"><button className="icon-button notification-button" aria-label="Notifications"><Icon name="bell" size={19} /><i /></button><button className="topbar-avatar" onClick={onLogout} title="Sign out"><Avatar initials={initials} tone="navy" /><Icon name="chevron" size={14} /></button><button className="topbar-signout" onClick={onLogout} aria-label="Sign out">Sign out</button></div></header>;
 }
 
 function MatchCard({ match, onOpen }: { match: typeof matches[number]; onOpen: () => void }) {
@@ -1279,7 +1279,34 @@ export default function Page() {
   const openAuth = (nextMode: 'login' | 'signup') => { setAuthMode(nextMode); setAuthOpen(true); };
   const enterDemo = () => { setAuthOpen(false); setOnboardOpen(false); setUser(null); withViewTransition(() => setMode('app')); };
   const handleAuthenticated = (nextUser: AuthUser, completedMode: 'login' | 'signup') => { setUser(nextUser); setAuthOpen(false); if (completedMode === 'signup') setOnboardOpen(true); else withViewTransition(() => setMode('app')); };
-  const logout = async () => { await fetch('/api/auth/logout', { method: 'POST' }).catch(() => undefined); setUser(null); withViewTransition(() => setMode('landing')); };
+  const logout = async () => {
+    // Server: clear the session cookie.
+    await fetch('/api/auth/logout', { method: 'POST' }).catch(() => undefined);
+    // Client: drop every per-session state that the old user could've left around.
+    // Without this, member lists + photo caches from the previous account
+    // can bleed into the next login (e.g. Discover showing the previous
+    // user's list because AppShell's `members` is cached).
+    setUser(null);
+    try {
+      localStorage.removeItem('ncr-profile-draft');
+    } catch { /* ignore */ }
+    // Best-effort: clear caches registered with the service worker, then
+    // do a full reload so in-flight fetches + timers don't get a chance
+    // to write stale state back into AppShell.
+    try {
+      if ('serviceWorker' in navigator && 'caches' in window) {
+        const regs = await navigator.serviceWorker.getRegistrations();
+        for (const r of regs) {
+          const keys = await caches.keys();
+          for (const k of keys) await caches.delete(k);
+          await r.unregister();
+        }
+      }
+    } catch { /* ignore */ }
+    withViewTransition(() => setMode('landing'));
+    // Defer reload to next tick so the view transition can start.
+    window.setTimeout(() => { try { window.location.reload(); } catch { /* ignore */ } }, 30);
+  };
   if (mode === 'app') return <AppShell user={user} onLogout={logout} />;
   return <><Landing onAuth={() => openAuth('login')} onOnboard={() => openAuth('signup')} onDemo={enterDemo} />{authOpen && <AuthModal initialMode={authMode} onClose={() => setAuthOpen(false)} onAuthenticated={handleAuthenticated} />}{onboardOpen && <OnboardModal onClose={() => setOnboardOpen(false)} onDone={() => { setOnboardOpen(false); withViewTransition(() => setMode('app')); }} />}</>;
 }

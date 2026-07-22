@@ -580,8 +580,10 @@ html.js .reveal[data-reveal-delay='3'] { transition-delay: 0.3s; }
 .topbar-actions { display: flex; align-items: center; gap: 18px; }
 .notification-button { position: relative; }
 .notification-button i { position: absolute; top: 3px; right: 3px; width: 7px; height: 7px; background: var(--gold); border-radius: 50%; border: 2px solid var(--paper); box-sizing: content-box; }
-.topbar-avatar { display: flex; align-items: center; gap: 8px; background: transparent; border: 0; border-radius: 10px; padding: 4px; transition: background 0.2s; }
+.topbar-avatar { display: flex; align-items: center; gap: 8px; background: transparent; border: 0; border-radius: 10px; padding: 4px; transition: background 0.2s; cursor: pointer; }
 .topbar-avatar:hover { background: rgba(107, 34, 51, 0.06); }
+.topbar-signout { display: inline-flex; align-items: center; gap: 6px; background: transparent; border: 1px solid var(--line-strong); color: var(--maroon-ink); font: inherit; font-size: 12.5px; font-weight: 600; padding: 7px 12px; border-radius: 10px; cursor: pointer; transition: background 0.2s, border-color 0.2s; }
+.topbar-signout:hover { background: rgba(107, 34, 51, 0.06); border-color: var(--maroon); }
 
 .view-body { padding: 40px 46px 70px; max-width: 1380px; }
 .view-body--home { padding-top: 34px; }
