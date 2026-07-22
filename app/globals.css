@@ -541,6 +541,7 @@ html.js .reveal[data-reveal-delay='3'] { transition-delay: 0.3s; }
 .side-link--active::before { content: ''; position: absolute; left: -16px; top: 8px; bottom: 8px; width: 3px; border-radius: 0 3px 3px 0; background: var(--gold-foil); }
 .side-link--active svg { color: var(--gold-bright); }
 .unread-dot { margin-left: auto; width: 7px; height: 7px; border-radius: 50%; background: var(--gold-bright); box-shadow: 0 0 0 3px rgba(230, 195, 106, 0.2); }
+.side-count { margin-left: auto; min-width: 18px; height: 18px; padding: 0 5px; display: inline-grid; place-items: center; background: var(--gold); color: var(--maroon-ink); font-size: 10px; font-weight: 700; border-radius: 20px; }
 .sidebar-bottom { margin-top: auto; }
 .side-link--admin { border-top: 1px solid rgba(230, 195, 106, 0.18); border-radius: 0; padding-top: 20px; color: #d3bfb4; }
 .admin-count { margin-left: auto; background: var(--gold); color: var(--maroon-ink); font-size: 10px; font-weight: 700; padding: 3px 7px; border-radius: 20px; }
